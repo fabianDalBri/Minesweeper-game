@@ -1,4 +1,7 @@
 package com.hfad.minegame
+/*
+    Startfragment with gamemenue for the games different opptions.
+ */
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

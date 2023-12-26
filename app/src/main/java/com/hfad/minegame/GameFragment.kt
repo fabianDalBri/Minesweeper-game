@@ -1,4 +1,7 @@
 package com.hfad.minegame
+/*
+    The gamefragment were the game will be displayed on.
+ */
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
