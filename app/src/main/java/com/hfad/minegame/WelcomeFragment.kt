@@ -1,6 +1,6 @@
 package com.hfad.minegame
 /*
-    Startfragment with gamemenue for the games different opptions.
+    Startfragment with game-menue for the games different opptions.
  */
 
 import android.os.Bundle
@@ -20,7 +20,6 @@ class WelcomeFragment : Fragment() {
         view.findNavController().navigate(R.id.action_welcomeFragment_to_gameFragment)
 
     }
-
         // Inflate the layout for this fragment
         return view
     }
