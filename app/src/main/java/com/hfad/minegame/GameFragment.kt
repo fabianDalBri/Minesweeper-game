@@ -1,5 +1,5 @@
 package com.hfad.minegame
-/*
+/**
     The gamefragment were the game will be displayed on.
  */
 
@@ -16,6 +16,7 @@ import android.widget.Chronometer
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.hfad.minegame.databinding.FragmentGameBinding
 
@@ -27,16 +28,16 @@ class GameFragment : Fragment(){
     lateinit var gameBoardCells : List<List<Tile>>
     lateinit var resetBtn : Button
     lateinit var timer : Chronometer
+    lateinit var viewModel: GameViewModel
     var rows = 8
     var columns = 8
     var mines = 10
     var firstClick = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_game, container, false)
 
-        binding = FragmentGameBinding.inflate(layoutInflater)
-        //val view = binding.root
+        binding = FragmentGameBinding.inflate(inflater, container, false)
+        val view = binding.root
 
 
         rootView = binding.rootLayout
@@ -55,7 +56,6 @@ class GameFragment : Fragment(){
         // Inflate the layout for this fragment
         return view
     }
-
     fun setText(text: String){
         binding.testText.text = text
     }
@@ -75,7 +75,7 @@ class GameFragment : Fragment(){
                 elements.col = array.indexOf(elements)
 
                 //elements.reveal()
-                var newView: ImageView = ImageView(this)
+                val newView: ImageView = ImageView(context)
 
                 elements.tileView = newView
                 gameboard.addView(newView)
@@ -101,6 +101,7 @@ class GameFragment : Fragment(){
                 })
             }
     }
+
     // Kallar på funktion i Tile.kt som ändrar isFlagged till true/false
     // Skapa knapp som ändrar till flaggningstryck.
     fun toggleFlag(currentTile: Tile) {
@@ -125,12 +126,12 @@ class GameFragment : Fragment(){
         currentView.setImageDrawable(image)
     }
     fun updateBoard(currentTile : Tile) {
-        var imView = currentTile.tileView
+        val imView = currentTile.tileView
         setDrawables(imView, currentTile)
     }
 
     fun revealBoard(){
-        var revealAll = gameBoardCells.flatten()
+        val revealAll = gameBoardCells.flatten()
         for (tile in revealAll) {
             if (!tile.isRevealed) {
                 tile.reveal()
@@ -143,7 +144,7 @@ class GameFragment : Fragment(){
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
-        var elapsedTime = elapsedTime()
+        val elapsedTime = elapsedTime()
         if (!firstClick){
             setText("You lost! Your time was $elapsedTime seconds")
         }else
@@ -153,7 +154,7 @@ class GameFragment : Fragment(){
     private fun gameWon(){
         // Kollar hur många tiles som är revealed och adderar reavealedTiles
         var revealedTiles : Int = 0
-        var totalAmountOfTiles : Int = rows*columns
+        val totalAmountOfTiles : Int = rows*columns
         for(array in gameBoardCells){
             for (elements in array){
                 if (elements.isRevealed)
@@ -163,13 +164,13 @@ class GameFragment : Fragment(){
         if (revealedTiles == totalAmountOfTiles - mines){
             revealBoard()
             timer.stop()
-            var elapsedTime = elapsedTime()
+            val elapsedTime = elapsedTime()
             setText("You won! Your time was $elapsedTime seconds")
         }
     }
 
     fun elapsedTime() : Double {
-        var elapsedTime = SystemClock.elapsedRealtime() - timer.base
+        val elapsedTime = SystemClock.elapsedRealtime() - timer.base
         // Omvandlar tid från millisekunder till sekunder m 2 decimaler
         return (elapsedTime/10)/100.0
     }
@@ -188,7 +189,7 @@ class GameFragment : Fragment(){
     }
 
     private fun revealCell(row : Int, col : Int) {
-        var currentTile = gameBoardCells[row][col]
+        val currentTile = gameBoardCells[row][col]
         if (!currentTile.isRevealed && !currentTile.isFlagged) {
             currentTile.reveal()
             if (currentTile.numberOfMinedNeighbours == 0) {
@@ -199,8 +200,6 @@ class GameFragment : Fragment(){
         if (currentTile.isMine) {
             gameOver(currentTile)
         }
-
-
     }
 
     private fun revealAdjacentCells(row: Int, col: Int) {
@@ -236,10 +235,10 @@ class GameFragment : Fragment(){
     // Ändrar state på Tile till mina? Returnerar lista så att jag ska kunna
     // kontrollera om det ändras, kan tar bort returtyp sen?
     fun plantMines() : List<Tile>{
-        var allTiles = gameBoardCells.flatten()
+        val allTiles = gameBoardCells.flatten()
         var counter = 0
         while(counter < mines) {
-            var randomTile = allTiles.random()
+            val randomTile = allTiles.random()
             if(!randomTile.isMine) {
                 randomTile.plantMine()
                 counter++

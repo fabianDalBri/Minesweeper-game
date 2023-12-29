@@ -1,5 +1,5 @@
 package com.hfad.minegame
-/*
+/**
     Startfragment with game-menue for the games different opptions.
  */
 
