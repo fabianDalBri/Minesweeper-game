@@ -20,6 +20,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.hfad.minegame.databinding.FragmentGameBinding
+import kotlin.math.min
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class GameFragment : Fragment(){
 
@@ -141,11 +144,11 @@ class GameFragment : Fragment(){
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
-        val elapsedTime = elapsedTime()
+        //val elapsedTime = elapsedTime()
         if (!viewModel.firstClick){
-            setText("You lost! Your time was $elapsedTime seconds")
+            setText("You lost! ${elapsedTime()}")
         }else
-            setText("You lost! Your time was 0.00 seconds")
+            setText("You lost! Your time was 0:00")
     }
 
     fun gameWon(){
@@ -161,14 +164,23 @@ class GameFragment : Fragment(){
         if (revealedTiles == totalAmountOfTiles - viewModel.mines){
             revealBoard()
             timer.stop()
-            val elapsedTime = elapsedTime()
-            setText("You won! Your time was $elapsedTime seconds")
+            elapsedTime()
+            setText("You won! ${elapsedTime()}")
         }
     }
-    fun elapsedTime() : Double {
+
+    /**
+     * Vi behöver ändra utskrift så att det står 00 minutes och 00 seconds.
+     */
+    fun elapsedTime(): String {
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
         // Omvandlar tid från millisekunder till sekunder m 2 decimaler
-        return (elapsedTime/10)/100.0
+        var totalSeconds = elapsedTime/1000
+        // om minuter blir mindre är 10 lägg på en nolla framför.
+        var minutes = totalSeconds/60
+        // om sekunder blir mindre är 10 lägg på en nolla framför.
+        var seconds = totalSeconds%60
+        return("Your time was $minutes:$seconds")
     }
 
     private fun resetBoard() {
@@ -254,7 +266,6 @@ class GameFragment : Fragment(){
                 }
             }
         }
-        binding.checkNumbers.text = testNum
     }
 
     private fun countAdjacentMines(row: Int, col: Int): Int {
