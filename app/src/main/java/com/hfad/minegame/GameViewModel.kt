@@ -6,6 +6,10 @@ package com.hfad.minegame
 
 import androidx.lifecycle.ViewModel
 
-class GameViewModel {
+class GameViewModel : ViewModel(){
+    var rows = 8
+    var columns = 8
+    var mines = 10
+    var firstClick = true
 
 }

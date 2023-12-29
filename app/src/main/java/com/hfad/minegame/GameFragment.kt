@@ -16,6 +16,7 @@ import android.widget.Chronometer
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.hfad.minegame.databinding.FragmentGameBinding
@@ -29,16 +30,12 @@ class GameFragment : Fragment(){
     lateinit var resetBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
-    var rows = 8
-    var columns = 8
-    var mines = 10
-    var firstClick = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
-
+        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
         rootView = binding.rootLayout
         gameboard = binding.gameBoard
@@ -50,7 +47,7 @@ class GameFragment : Fragment(){
         }
         //Skapar bräde med celler, lista med listor rows*columns, där varje cell består
         //av objekt av typen Tile
-        gameBoardCells = List(rows){ List(columns) { Tile()}}
+        gameBoardCells = List(viewModel.rows){ List(viewModel.columns) { Tile()}}
 
         setUpGame()
         // Inflate the layout for this fragment
@@ -65,7 +62,7 @@ class GameFragment : Fragment(){
      */
     @SuppressLint("SuspiciousIndentation")
     fun setUpGame() {
-        firstClick = true
+        viewModel.firstClick = true
         resetBoard()
         plantMines()
         calculateNumbers()
@@ -89,10 +86,10 @@ class GameFragment : Fragment(){
                         revealCell(elements.row, elements.col)
                         gameWon()
                     }
-                    if (firstClick && !elements.isMine){
+                    if (viewModel.firstClick && !elements.isMine){
                         setBaseTime()
                         timer.start()
-                        firstClick = false
+                        viewModel.firstClick = false
                     }
                 })
                 newView.setOnLongClickListener(View.OnLongClickListener {
@@ -140,35 +137,34 @@ class GameFragment : Fragment(){
         }
     }
 
-    private fun gameOver(currentTile : Tile) {
+    fun gameOver(currentTile : Tile) {
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
         val elapsedTime = elapsedTime()
-        if (!firstClick){
+        if (!viewModel.firstClick){
             setText("You lost! Your time was $elapsedTime seconds")
         }else
             setText("You lost! Your time was 0.00 seconds")
     }
 
-    private fun gameWon(){
+    fun gameWon(){
         // Kollar hur många tiles som är revealed och adderar reavealedTiles
         var revealedTiles : Int = 0
-        val totalAmountOfTiles : Int = rows*columns
+        val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
         for(array in gameBoardCells){
             for (elements in array){
                 if (elements.isRevealed)
                     revealedTiles++
             }
         }
-        if (revealedTiles == totalAmountOfTiles - mines){
+        if (revealedTiles == totalAmountOfTiles - viewModel.mines){
             revealBoard()
             timer.stop()
             val elapsedTime = elapsedTime()
             setText("You won! Your time was $elapsedTime seconds")
         }
     }
-
     fun elapsedTime() : Double {
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
         // Omvandlar tid från millisekunder till sekunder m 2 decimaler
@@ -207,7 +203,7 @@ class GameFragment : Fragment(){
             for (j in -1..1) {
                 val newRow = row + i
                 val newCol = col + j
-                if (newRow in 0 until rows && newCol in 0 until columns && !gameBoardCells[newRow][newCol].isRevealed) {
+                if (newRow in 0 until viewModel.rows && newCol in 0 until viewModel.columns && !gameBoardCells[newRow][newCol].isRevealed) {
                     revealCell(newRow, newCol)
                 }
             }
@@ -237,7 +233,7 @@ class GameFragment : Fragment(){
     fun plantMines() : List<Tile>{
         val allTiles = gameBoardCells.flatten()
         var counter = 0
-        while(counter < mines) {
+        while(counter < viewModel.mines) {
             val randomTile = allTiles.random()
             if(!randomTile.isMine) {
                 randomTile.plantMine()
@@ -249,8 +245,8 @@ class GameFragment : Fragment(){
 
     private fun calculateNumbers() {
         var testNum : String = ""
-        for (row in 0 until rows) {
-            for (col in 0 until columns) {
+        for (row in 0 until viewModel.rows) {
+            for (col in 0 until viewModel.columns) {
                 if (!gameBoardCells[row][col].isMine) {
                     val count = countAdjacentMines(row, col)
                     testNum += count
@@ -267,7 +263,7 @@ class GameFragment : Fragment(){
             for (j in -1..1) {
                 val newRow = row + i
                 val newCol = col + j
-                if (newRow in 0 until rows && newCol in 0 until columns && gameBoardCells[newRow][newCol].isMine) {
+                if (newRow in 0 until viewModel.rows && newCol in 0 until viewModel.columns && gameBoardCells[newRow][newCol].isMine) {
                     count++
                 }
             }
