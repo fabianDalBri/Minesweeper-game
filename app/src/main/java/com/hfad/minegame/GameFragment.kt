@@ -207,7 +207,8 @@ class GameFragment : Fragment(){
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
         val builder = AlertDialog.Builder(context)
         val input = EditText(context)
-        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        var usrName : String
+        input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
         for(array in viewModel.gameBoardCells){
             for (elements in array){
@@ -219,7 +220,12 @@ class GameFragment : Fragment(){
             revealBoard()
             timer.stop()
             elapsedTime()
-            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " + input.text)
+            builder.setMessage("You won! ${elapsedTime()} \n"+" \n Please enter your username: " + input.text)
+                .setPositiveButton("Confirm") { dialog, id ->
+                    usrName = input.text.toString()
+                }
+            val alert = builder.create()
+            alert.show()
             viewModel.isRunning = false
             viewModel.elapsedTime = 0L
         }
