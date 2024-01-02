@@ -4,6 +4,7 @@ The gamefragment were the game will be displayed on.
  */
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
@@ -52,7 +53,18 @@ class GameFragment : Fragment(){
         offset = viewModel.elapsedTime
 
         homeBtn.setOnClickListener(){
-            view.findNavController().navigate(R.id.welcomeFragment)
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("Are you sure you want to go to Home?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    view.findNavController().navigate(R.id.welcomeFragment)
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
         }
 
         resetBtn.setOnClickListener(){
