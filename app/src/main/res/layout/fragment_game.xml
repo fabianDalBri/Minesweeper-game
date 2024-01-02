@@ -40,14 +40,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-
+    <Switch
+        android:id="@+id/switch_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:checked="true"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:thumb="@drawable/flag"
+        android:track="@drawable/bg_track"
+        android:paddingBottom="10dp"/>
 
     <Button
         android:id="@+id/reset_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New game"/>
-
+        android:text="New game" />
 
 </LinearLayout>
 
