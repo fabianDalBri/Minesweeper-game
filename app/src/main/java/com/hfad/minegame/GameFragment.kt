@@ -28,7 +28,7 @@ import kotlin.time.Duration.Companion.seconds
 class GameFragment : Fragment(){
 
     private lateinit var binding: FragmentGameBinding
-    lateinit var rootView : LinearLayout
+    lateinit var rootView : ConstraintLayout
     lateinit var gameboard : GridLayout
     //lateinit var gameBoardCells : List<List<Tile>>
     lateinit var resetBtn : Button
@@ -93,21 +93,22 @@ class GameFragment : Fragment(){
                 //kalla på metod som sätter drawable beroende på isRevealed och state?
                 setDrawables(newView, elements)
 
-                newView.setOnClickListener(View.OnClickListener {
-                    if(!elements.isRevealed && !elements.isFlagged){
-                        revealCell(elements.row, elements.col)
-                        gameWon()
-                    }
-                    if (viewModel.firstClick && !elements.isMine){
-                        setBaseTime()
-                        timer.start()
-                        viewModel.firstClick = false
-                    }
-                })
-                newView.setOnLongClickListener(View.OnLongClickListener {
-                    toggleFlag(elements)
-                    true
-                })
+
+                    newView.setOnClickListener(View.OnClickListener {
+                        if(!binding.switchButton.isChecked) {
+                            if (!elements.isRevealed && !elements.isFlagged) {
+                                revealCell(elements.row, elements.col)
+                                gameWon()
+                            }
+                            if (viewModel.firstClick && !elements.isMine) {
+                                setBaseTime()
+                                timer.start()
+                                viewModel.firstClick = false
+                            }
+                        } else {
+                            toggleFlag(elements)
+                        }
+                    })
             }
     }
 
@@ -215,7 +216,6 @@ class GameFragment : Fragment(){
         if (currentTile.isMine) {
             gameOver(currentTile)
         }
-        setText(viewModel.gameBoardCells.toString())
     }
 
     private fun revealAdjacentCells(row: Int, col: Int) {
