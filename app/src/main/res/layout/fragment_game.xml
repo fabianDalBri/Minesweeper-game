@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
-        android:background="#a2a3a4"
+        android:background="#ffffff"
         android:columnCount="8"
         android:rowCount="8"
         app:layout_constraintEnd_toEndOf="parent"

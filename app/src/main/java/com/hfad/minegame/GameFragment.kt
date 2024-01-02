@@ -52,7 +52,7 @@ class GameFragment : Fragment(){
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
-        offset = viewModel.elapsedTime
+        //offset = viewModel.elapsedTime
 
         homeBtn.setOnClickListener(){
             val builder = AlertDialog.Builder(context)
@@ -89,9 +89,10 @@ class GameFragment : Fragment(){
         //av objekt av typen Tile
        // gameBoardCells = viewModel.gameBoardCells
 
-        if(!viewModel.isRunning)
+        if(!viewModel.isRunning) {
+            //viewModel.elapsedTime = 0L
             initiateGame()
-        else{
+        }else{
             setBaseTime()
             timer.start()
             setUpGame()
@@ -195,6 +196,7 @@ class GameFragment : Fragment(){
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
         viewModel.isRunning = false
+        viewModel.elapsedTime = 0L
         if (!viewModel.firstClick){
             setText("You lost! ${elapsedTime()}")
         }else
@@ -216,8 +218,9 @@ class GameFragment : Fragment(){
             timer.stop()
             elapsedTime()
             setText("You won! ${elapsedTime()}")
+            viewModel.isRunning = false
+            viewModel.elapsedTime = 0L
         }
-        viewModel.isRunning = false
     }
 
     fun elapsedTime(): String {
@@ -339,6 +342,7 @@ class GameFragment : Fragment(){
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.elapsedTime = SystemClock.elapsedRealtime() - timer.base
+        if(viewModel.isRunning)
+            viewModel.elapsedTime = SystemClock.elapsedRealtime() - timer.base
     }
 }
