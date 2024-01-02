@@ -3,28 +3,25 @@ package com.hfad.minegame
 The gamefragment were the game will be displayed on.
  */
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
-import androidx.fragment.app.Fragment
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Chronometer
+import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.hfad.minegame.databinding.FragmentGameBinding
-import kotlin.math.min
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
+
 
 class GameFragment : Fragment(){
 
@@ -56,6 +53,7 @@ class GameFragment : Fragment(){
 
         homeBtn.setOnClickListener(){
             val builder = AlertDialog.Builder(context)
+            //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to Home?")
                 .setCancelable(false)
                 .setPositiveButton("Yes") { dialog, id ->
@@ -207,6 +205,10 @@ class GameFragment : Fragment(){
         // Kollar hur många tiles som är revealed och adderar reavealedTiles
         var revealedTiles : Int = 0
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
+        val builder = AlertDialog.Builder(context)
+        val input = EditText(context)
+        input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        builder.setView(input)
         for(array in viewModel.gameBoardCells){
             for (elements in array){
                 if (elements.isRevealed)
@@ -217,7 +219,7 @@ class GameFragment : Fragment(){
             revealBoard()
             timer.stop()
             elapsedTime()
-            setText("You won! ${elapsedTime()}")
+            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " + input.text)
             viewModel.isRunning = false
             viewModel.elapsedTime = 0L
         }
