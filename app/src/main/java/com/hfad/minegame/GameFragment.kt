@@ -34,6 +34,7 @@ class GameFragment : Fragment(){
     lateinit var resetBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
+    var offset = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -46,6 +47,8 @@ class GameFragment : Fragment(){
         resetBtn = binding.resetButton
         timer = binding.timer
 
+        offset = viewModel.elapsedTime
+
         resetBtn.setOnClickListener(){
             initiateGame()
         }
@@ -55,7 +58,11 @@ class GameFragment : Fragment(){
 
         if(!viewModel.isRunning)
             initiateGame()
-        else setUpGame()
+        else{
+            setBaseTime()
+            timer.start()
+            setUpGame()
+        }
         // Inflate the layout for this fragment
         return view
     }
@@ -154,6 +161,7 @@ class GameFragment : Fragment(){
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
+        viewModel.isRunning = false
         if (!viewModel.firstClick){
             setText("You lost! ${elapsedTime()}")
         }else
@@ -176,6 +184,7 @@ class GameFragment : Fragment(){
             elapsedTime()
             setText("You won! ${elapsedTime()}")
         }
+        viewModel.isRunning = false
     }
 
     fun elapsedTime(): String {
@@ -292,6 +301,11 @@ class GameFragment : Fragment(){
         return count
     }
     fun setBaseTime() {
-        binding.timer.base = SystemClock.elapsedRealtime() - 0
+        binding.timer.base = SystemClock.elapsedRealtime() - viewModel.elapsedTime
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.elapsedTime = SystemClock.elapsedRealtime() - timer.base
     }
 }

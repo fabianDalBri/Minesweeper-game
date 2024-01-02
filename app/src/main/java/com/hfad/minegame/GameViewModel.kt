@@ -4,8 +4,6 @@ package com.hfad.minegame
 Klass som innehåller ....
  */
 
-import android.widget.GridLayout
-import android.widget.ImageView
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel(){
@@ -15,6 +13,7 @@ class GameViewModel : ViewModel(){
     var firstClick = true
     var gameBoardCells = List(rows){ List(columns) { Tile()}}
     var isRunning = false
+    var elapsedTime = 0L
 
 
 
