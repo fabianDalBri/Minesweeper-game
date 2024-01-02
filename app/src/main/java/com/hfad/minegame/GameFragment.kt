@@ -193,7 +193,7 @@ class GameFragment : Fragment(){
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
-        viewModel.isRunning = false
+        //viewModel.isRunning = false
         viewModel.elapsedTime = 0L
         if (!viewModel.firstClick){
             setText("You lost! ${elapsedTime()}")
@@ -226,7 +226,7 @@ class GameFragment : Fragment(){
                 }
             val alert = builder.create()
             alert.show()
-            viewModel.isRunning = false
+            //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
         }
     }

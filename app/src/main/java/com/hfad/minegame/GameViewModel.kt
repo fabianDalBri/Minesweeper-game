@@ -14,6 +14,8 @@ class GameViewModel : ViewModel(){
     var gameBoardCells = List(rows){ List(columns) { Tile()}}
     var isRunning = false
     var elapsedTime = 0L
+    // någon form av kontroll så att brädet och timer stannar som de är om man roterar skärmen?
+    var gameLost = false
 
 
 
