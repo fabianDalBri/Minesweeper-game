@@ -1,6 +1,6 @@
 package com.hfad.minegame
 /**
-    The gamefragment were the game will be displayed on.
+The gamefragment were the game will be displayed on.
  */
 
 import android.annotation.SuppressLint
@@ -16,6 +16,7 @@ import android.widget.Chronometer
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -29,7 +30,7 @@ class GameFragment : Fragment(){
     private lateinit var binding: FragmentGameBinding
     lateinit var rootView : LinearLayout
     lateinit var gameboard : GridLayout
-    lateinit var gameBoardCells : List<List<Tile>>
+    //lateinit var gameBoardCells : List<List<Tile>>
     lateinit var resetBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
@@ -46,13 +47,15 @@ class GameFragment : Fragment(){
         timer = binding.timer
 
         resetBtn.setOnClickListener(){
-            setUpGame()
+            initiateGame()
         }
         //Skapar bräde med celler, lista med listor rows*columns, där varje cell består
         //av objekt av typen Tile
-        gameBoardCells = List(viewModel.rows){ List(viewModel.columns) { Tile()}}
+       // gameBoardCells = viewModel.gameBoardCells
 
-        setUpGame()
+        if(!viewModel.isRunning)
+            initiateGame()
+        else setUpGame()
         // Inflate the layout for this fragment
         return view
     }
@@ -60,18 +63,22 @@ class GameFragment : Fragment(){
         binding.testText.text = text
     }
 
-    /** Skapar en ny ImageView för varje Tile-objekt i spelbrädet
-     *
-     */
-    @SuppressLint("SuspiciousIndentation")
-    fun setUpGame() {
+    fun initiateGame() {
         viewModel.firstClick = true
+        viewModel.isRunning = true
         resetBoard()
         plantMines()
         calculateNumbers()
-        for (array in gameBoardCells)
+        setUpGame()
+    }
+
+    /** Skapar en ny ImageView för varje Tile-objekt i spelbrädet
+     *
+     */
+    fun setUpGame() {
+        for (array in viewModel.gameBoardCells)
             for (elements in array) {
-                elements.row = gameBoardCells.indexOf(array)
+                elements.row = viewModel.gameBoardCells.indexOf(array)
                 elements.col = array.indexOf(elements)
 
                 //elements.reveal()
@@ -79,6 +86,8 @@ class GameFragment : Fragment(){
 
                 elements.tileView = newView
                 gameboard.addView(newView)
+                gameboard.rowCount = viewModel.rows
+                gameboard.columnCount = viewModel.columns
                 newView.layoutParams.height = 80
                 newView.layoutParams.width = 80
                 //kalla på metod som sätter drawable beroende på isRevealed och state?
@@ -116,12 +125,12 @@ class GameFragment : Fragment(){
      */
     fun setDrawables(currentView : ImageView, currentTile : Tile){
         lateinit var image : Drawable
-        when(currentTile.state) {
-            Tile.State.MINE -> image = resources.getDrawable(R.drawable.mine_tile)
-            Tile.State.FLAGGED -> image = resources.getDrawable(R.drawable.flag_tile)
-            Tile.State.HIDDEN -> image = resources.getDrawable(R.drawable.tile_hidden)
+        image = when(currentTile.state) {
+            Tile.State.MINE -> resources.getDrawable(R.drawable.mine_tile)
+            Tile.State.FLAGGED -> resources.getDrawable(R.drawable.flag_tile)
+            Tile.State.HIDDEN -> resources.getDrawable(R.drawable.tile_hidden)
             // tilestate för detonerad bomb för alla eller de som ej flaggats?
-            Tile.State.NUMBERED -> image = numberedTile(currentTile.numberOfMinedNeighbours)
+            Tile.State.NUMBERED -> numberedTile(currentTile.numberOfMinedNeighbours)
         }
         currentView.setImageDrawable(image)
     }
@@ -131,7 +140,7 @@ class GameFragment : Fragment(){
     }
 
     fun revealBoard(){
-        val revealAll = gameBoardCells.flatten()
+        val revealAll = viewModel.gameBoardCells.flatten()
         for (tile in revealAll) {
             if (!tile.isRevealed) {
                 tile.reveal()
@@ -155,7 +164,7 @@ class GameFragment : Fragment(){
         // Kollar hur många tiles som är revealed och adderar reavealedTiles
         var revealedTiles : Int = 0
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
-        for(array in gameBoardCells){
+        for(array in viewModel.gameBoardCells){
             for (elements in array){
                 if (elements.isRevealed)
                     revealedTiles++
@@ -185,9 +194,11 @@ class GameFragment : Fragment(){
 
     private fun resetBoard() {
         // om tile är mine, ta bort från gameboard.
-        gameBoardCells.flatten().filter { it.isMine }.forEach { tile -> tile.removeMine() }
+        viewModel.gameBoardCells.flatten().filter { it.isMine }.forEach { tile -> tile.removeMine() }
         // om tile är avslöjad, göm den igen.
-        gameBoardCells.flatten().filter { it.isRevealed }.forEach { tile -> tile.hide() }
+        viewModel.gameBoardCells.flatten().filter { it.isRevealed }.forEach { tile -> tile.hide() }
+        // om tile är flaggad, ta bort flagga
+        viewModel.gameBoardCells.flatten().filter { it.isFlagged }.forEach { tile -> tile.toggleFlag() }
         // ta bort view.
         gameboard.removeAllViews()
         // ta bort text
@@ -197,7 +208,7 @@ class GameFragment : Fragment(){
     }
 
     private fun revealCell(row : Int, col : Int) {
-        val currentTile = gameBoardCells[row][col]
+        val currentTile = viewModel.gameBoardCells[row][col]
         if (!currentTile.isRevealed && !currentTile.isFlagged) {
             currentTile.reveal()
             if (currentTile.numberOfMinedNeighbours == 0) {
@@ -208,6 +219,7 @@ class GameFragment : Fragment(){
         if (currentTile.isMine) {
             gameOver(currentTile)
         }
+        setText(viewModel.gameBoardCells.toString())
     }
 
     private fun revealAdjacentCells(row: Int, col: Int) {
@@ -215,7 +227,7 @@ class GameFragment : Fragment(){
             for (j in -1..1) {
                 val newRow = row + i
                 val newCol = col + j
-                if (newRow in 0 until viewModel.rows && newCol in 0 until viewModel.columns && !gameBoardCells[newRow][newCol].isRevealed) {
+                if (newRow in 0 until viewModel.rows && newCol in 0 until viewModel.columns && !viewModel.gameBoardCells[newRow][newCol].isRevealed) {
                     revealCell(newRow, newCol)
                 }
             }
@@ -243,7 +255,7 @@ class GameFragment : Fragment(){
     // Ändrar state på Tile till mina? Returnerar lista så att jag ska kunna
     // kontrollera om det ändras, kan tar bort returtyp sen?
     fun plantMines() : List<Tile>{
-        val allTiles = gameBoardCells.flatten()
+        val allTiles = viewModel.gameBoardCells.flatten()
         var counter = 0
         while(counter < viewModel.mines) {
             val randomTile = allTiles.random()
@@ -256,13 +268,15 @@ class GameFragment : Fragment(){
     }
 
     private fun calculateNumbers() {
+        //var endast för testutskrift
         var testNum : String = ""
         for (row in 0 until viewModel.rows) {
             for (col in 0 until viewModel.columns) {
-                if (!gameBoardCells[row][col].isMine) {
+                if (!viewModel.gameBoardCells[row][col].isMine) {
                     val count = countAdjacentMines(row, col)
+                    //endast för testutskrift
                     testNum += count
-                    gameBoardCells[row][col].numberOfMinedNeighbours = count
+                    viewModel.gameBoardCells[row][col].numberOfMinedNeighbours = count
                 }
             }
         }
@@ -274,7 +288,7 @@ class GameFragment : Fragment(){
             for (j in -1..1) {
                 val newRow = row + i
                 val newCol = col + j
-                if (newRow in 0 until viewModel.rows && newCol in 0 until viewModel.columns && gameBoardCells[newRow][newCol].isMine) {
+                if (newRow in 0 until viewModel.rows && newCol in 0 until viewModel.columns && viewModel.gameBoardCells[newRow][newCol].isMine) {
                     count++
                 }
             }
