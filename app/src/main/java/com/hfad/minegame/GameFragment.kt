@@ -153,7 +153,6 @@ class GameFragment : Fragment(){
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
-        //val elapsedTime = elapsedTime()
         if (!viewModel.firstClick){
             setText("You lost! ${elapsedTime()}")
         }else
@@ -178,9 +177,6 @@ class GameFragment : Fragment(){
         }
     }
 
-    /**
-     * Vi behöver ändra utskrift så att det står 00 minutes och 00 seconds.
-     */
     fun elapsedTime(): String {
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
         // Omvandlar tid från millisekunder till sekunder m 2 decimaler
@@ -189,7 +185,7 @@ class GameFragment : Fragment(){
         var minutes = totalSeconds/60
         // om sekunder blir mindre är 10 lägg på en nolla framför.
         var seconds = totalSeconds%60
-        return("Your time was $minutes:$seconds")
+        return("Your time was $minutes minutes and $seconds seconds")
     }
 
     private fun resetBoard() {
