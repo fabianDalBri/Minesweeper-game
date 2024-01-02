@@ -34,6 +34,7 @@ class GameFragment : Fragment(){
     //lateinit var gameBoardCells : List<List<Tile>>
     lateinit var resetBtn : Button
     lateinit var homeBtn : Button
+    lateinit var questionBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
     var offset = 0L
@@ -49,6 +50,7 @@ class GameFragment : Fragment(){
         resetBtn = binding.resetButton
         timer = binding.timer
         homeBtn = binding.homeButton
+        questionBtn = binding.questionButton
 
         offset = viewModel.elapsedTime
 
@@ -66,6 +68,18 @@ class GameFragment : Fragment(){
             val alert = builder.create()
             alert.show()
         }
+
+        questionBtn.setOnClickListener(){
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("How to play: \n" +
+                            "Reveal all none mine tiles to win the game.\n" +
+                            "Use the flag button to flag potential mines.").setCancelable(true)
+
+            val alert = builder.create()
+            alert.show()
+        }
+
+
 
         resetBtn.setOnClickListener(){
             initiateGame()
