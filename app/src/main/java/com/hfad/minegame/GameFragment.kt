@@ -28,13 +28,11 @@ class GameFragment : Fragment(){
     private lateinit var binding: FragmentGameBinding
     lateinit var rootView : ConstraintLayout
     lateinit var gameboard : GridLayout
-    //lateinit var gameBoardCells : List<List<Tile>>
     lateinit var resetBtn : Button
     lateinit var homeBtn : Button
     lateinit var questionBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
-    var offset = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -48,8 +46,6 @@ class GameFragment : Fragment(){
         timer = binding.timer
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
-
-        //offset = viewModel.elapsedTime
 
         homeBtn.setOnClickListener(){
             val builder = AlertDialog.Builder(context)
@@ -80,6 +76,12 @@ class GameFragment : Fragment(){
 
 
         resetBtn.setOnClickListener(){
+            if(viewModel.isTimerRunning) {
+                timer.stop()
+                viewModel.isTimerRunning = false
+            }
+            viewModel.elapsedTime = 0L
+            setBaseTime()
             initiateGame()
         }
 
@@ -87,12 +89,12 @@ class GameFragment : Fragment(){
         //av objekt av typen Tile
        // gameBoardCells = viewModel.gameBoardCells
 
-        if(!viewModel.isRunning) {
+        if(!viewModel.isTimerRunning) {
             //viewModel.elapsedTime = 0L
             initiateGame()
         }else{
-            setBaseTime()
             timer.start()
+            setBaseTime()
             setUpGame()
         }
         // Inflate the layout for this fragment
@@ -104,7 +106,6 @@ class GameFragment : Fragment(){
 
     fun initiateGame() {
         viewModel.firstClick = true
-        viewModel.isRunning = true
         resetBoard()
         plantMines()
         calculateNumbers()
@@ -143,6 +144,7 @@ class GameFragment : Fragment(){
                                 setBaseTime()
                                 timer.start()
                                 viewModel.firstClick = false
+                                viewModel.isTimerRunning = true
                             }
                         } else {
                             toggleFlag(elements)
@@ -193,6 +195,8 @@ class GameFragment : Fragment(){
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
+        viewModel.isTimerRunning = false
+        viewModel.isGameOver = true
         //viewModel.isRunning = false
         viewModel.elapsedTime = 0L
         if (!viewModel.firstClick){
@@ -219,6 +223,7 @@ class GameFragment : Fragment(){
         if (revealedTiles == totalAmountOfTiles - viewModel.mines){
             revealBoard()
             timer.stop()
+            viewModel.isTimerRunning = false
             elapsedTime()
             builder.setMessage("You won! ${elapsedTime()} \n"+" \n Please enter your username: " + input.text)
                 .setPositiveButton("Confirm") { dialog, id ->
@@ -226,6 +231,7 @@ class GameFragment : Fragment(){
                 }
             val alert = builder.create()
             alert.show()
+            viewModel.isGameOver = true
             //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
         }
@@ -350,7 +356,7 @@ class GameFragment : Fragment(){
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(viewModel.isRunning)
+        if(viewModel.isTimerRunning)
             viewModel.elapsedTime = SystemClock.elapsedRealtime() - timer.base
     }
 }
