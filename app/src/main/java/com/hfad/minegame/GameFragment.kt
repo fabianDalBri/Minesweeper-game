@@ -32,6 +32,7 @@ class GameFragment : Fragment(){
     lateinit var gameboard : GridLayout
     //lateinit var gameBoardCells : List<List<Tile>>
     lateinit var resetBtn : Button
+    lateinit var homeBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
     var offset = 0L
@@ -46,12 +47,18 @@ class GameFragment : Fragment(){
         gameboard = binding.gameBoard
         resetBtn = binding.resetButton
         timer = binding.timer
+        homeBtn = binding.homeButton
 
         offset = viewModel.elapsedTime
+
+        homeBtn.setOnClickListener(){
+            view.findNavController().navigate(R.id.welcomeFragment)
+        }
 
         resetBtn.setOnClickListener(){
             initiateGame()
         }
+
         //Skapar bräde med celler, lista med listor rows*columns, där varje cell består
         //av objekt av typen Tile
        // gameBoardCells = viewModel.gameBoardCells
