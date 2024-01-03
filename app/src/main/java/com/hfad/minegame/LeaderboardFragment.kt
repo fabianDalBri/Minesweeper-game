@@ -31,7 +31,6 @@ import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 class LeaderboardFragment : Fragment() {
     private lateinit var binding: FragmentLeaderboardBinding
     lateinit var rootView : ConstraintLayout
-    lateinit var gameLeaderboard : TextView
     lateinit var playerList : TextView
     lateinit var homeBtn : Button
     lateinit var questionBtn : Button
@@ -46,6 +45,7 @@ class LeaderboardFragment : Fragment() {
         val view = binding.root
         viewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
+        playerList = binding.playerList
         backBtn = binding.BackButton
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
@@ -84,9 +84,9 @@ class LeaderboardFragment : Fragment() {
 
         questionBtn.setOnClickListener(){
             val builder = AlertDialog.Builder(context)
-            builder.setMessage("How to play: \n" +
-                    "Reveal all none mine tiles to win the game.\n" +
-                    "Use the flag button to flag potential mines.").setCancelable(true)
+            builder.setMessage("Game Leaderbord: \n" +
+                    "Playername and their gametime ends up in the.\n" +
+                    "bracket below if you have won the game.").setCancelable(true)
 
             val alert = builder.create()
             alert.show()

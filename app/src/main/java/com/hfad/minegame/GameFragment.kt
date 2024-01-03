@@ -238,11 +238,10 @@ class GameFragment : Fragment(){
             viewModel.isGameOver = true
             //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
+
+            val alert = builder.create()
+            alert.show()
         }
-
-
-        val alert = builder.create()
-        alert.show()
     }
 
     fun firebase(playerName : String){
