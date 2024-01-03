@@ -231,18 +231,18 @@ class GameFragment : Fragment(){
             timer.stop()
             viewModel.isTimerRunning = false
             elapsedTime()
-            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: ")
-                .setPositiveButton("Confirm") { dialog, id ->
-                    usrName = input.text.toString()
+            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " )
+                .setPositiveButton("Confirm") { dialog, which ->
+                    firebase(input.text.toString())
                 }
-            firebase(usrName)
-            val alert = builder.create()
-            alert.show()
             viewModel.isGameOver = true
             //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
-
         }
+
+
+        val alert = builder.create()
+        alert.show()
     }
 
     fun firebase(playerName : String){
