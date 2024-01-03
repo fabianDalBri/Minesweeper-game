@@ -13,11 +13,13 @@
         android:layout_marginTop="64dp"
         android:fontFamily="serif"
         android:text="@string/minesweeper"
+        android:textColor="@color/white"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/start_game"
@@ -28,7 +30,7 @@
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leaderboard" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
     <Button
         android:id="@+id/leaderboard"
         android:layout_width="wrap_content"
