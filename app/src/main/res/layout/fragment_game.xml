@@ -19,7 +19,7 @@
         app:maxZoomType="zoom"
         app:minZoomType="zoom"
         app:overPinchable="true"
-        app:overScrollHorizontal="true"
+        app:overScrollHorizontal="false"
         app:overScrollVertical="true"
         app:verticalPanEnabled="true"
         app:zoomEnabled="true">
