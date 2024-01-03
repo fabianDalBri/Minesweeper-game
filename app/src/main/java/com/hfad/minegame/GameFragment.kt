@@ -26,7 +26,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
-
 class GameFragment : Fragment(){
 
     private lateinit var binding: FragmentGameBinding
@@ -39,6 +38,7 @@ class GameFragment : Fragment(){
     lateinit var viewModel: GameViewModel
     var usrName : String = ""
     val db = Firebase.firestore
+    var usrName : String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -232,7 +232,7 @@ class GameFragment : Fragment(){
             elapsedTime()
             builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: ")
                 .setPositiveButton("Confirm") { dialog, id ->
-                    usrName += input.text.toString()
+                    usrName = input.text.toString()
                 }
             val alert = builder.create()
             alert.show()
