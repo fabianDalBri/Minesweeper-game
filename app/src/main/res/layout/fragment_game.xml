@@ -5,10 +5,33 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
     tools:context=".GameFragment">
 
+    <com.otaliastudios.zoom.ZoomLayout
+        android:id="@+id/game_zoom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:hasClickableChildren="true"
+        app:horizontalPanEnabled="true"
+        app:maxZoom="3.0"
+        app:minZoom="0.1"
+        app:maxZoomType="zoom"
+        app:minZoomType="zoom"
+        app:overPinchable="true"
+        app:overScrollHorizontal="true"
+        app:overScrollVertical="true"
+        app:verticalPanEnabled="true"
+        app:zoomEnabled="true">
+
+    <GridLayout
+        android:id="@+id/gameBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testText" />
+    </com.otaliastudios.zoom.ZoomLayout>
 
     <Button
         android:id="@+id/question_button"
@@ -21,6 +44,7 @@
         android:paddingLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/home_button"
@@ -51,31 +75,18 @@
         android:id="@+id/testText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timer" />
-
-    <GridLayout
-        android:id="@+id/gameBoard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
-        android:background="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testText" />
 
     <Switch
         android:id="@+id/switch_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="620dp"
         android:checked="false"
-        android:paddingBottom="10dp"
         android:scaleX="2"
         android:scaleY="2"
         android:thumb="@drawable/flag"
@@ -83,8 +94,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameBoard" />
-
+        app:layout_constraintTop_toBottomOf="@id/testText" />
     <Button
         android:id="@+id/reset_button"
         android:layout_width="wrap_content"
