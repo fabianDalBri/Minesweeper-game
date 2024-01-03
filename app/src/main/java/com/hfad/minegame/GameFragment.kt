@@ -235,12 +235,13 @@ class GameFragment : Fragment(){
                 .setPositiveButton("Confirm") { dialog, id ->
                     usrName = input.text.toString()
                 }
+            firebase(usrName)
             val alert = builder.create()
             alert.show()
             viewModel.isGameOver = true
             //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
-            firebase(usrName)
+
         }
     }
 
