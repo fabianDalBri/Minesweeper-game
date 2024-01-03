@@ -216,10 +216,6 @@ class GameFragment : Fragment(){
         // Kollar hur många tiles som är revealed och adderar reavealedTiles
         var revealedTiles : Int = 0
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
-        val builder = AlertDialog.Builder(context)
-        val input = EditText(context)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
         for(array in viewModel.gameBoardCells){
             for (elements in array){
                 if (elements.isRevealed)
@@ -231,6 +227,10 @@ class GameFragment : Fragment(){
             timer.stop()
             viewModel.isTimerRunning = false
             elapsedTime()
+            val builder = AlertDialog.Builder(context)
+            val input = EditText(context)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            builder.setView(input)
             builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " )
                 .setPositiveButton("Confirm") { dialog, which ->
                     firebase(input.text.toString())
