@@ -18,8 +18,7 @@ class WelcomeFragment : Fragment() {
         val startButton = view.findViewById<Button>(R.id.start_game)
         val leaderboardButton = view.findViewById<Button>(R.id.leaderboard)
         startButton.setOnClickListener {
-        view.findNavController().navigate(R.id.action_welcomeFragment_to_gameFragment)
-
+        view.findNavController().navigate(R.id.action_welcomeFragment_to_difficultyFragment)
          }
         leaderboardButton.setOnClickListener{
             view.findNavController().navigate(R.id.action_welcomeFragment_to_leaderboardFragment)
