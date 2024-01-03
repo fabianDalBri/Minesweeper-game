@@ -36,6 +36,7 @@ class GameFragment : Fragment(){
     lateinit var questionBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
+    lateinit var viewModelFactory : GameViewModelFactory
     var usrName : String = ""
     val db = Firebase.firestore
 
@@ -43,7 +44,8 @@ class GameFragment : Fragment(){
 
         binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        viewModelFactory = GameViewModelFactory(8,8,10)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 
         rootView = binding.rootLayout
         gameboard = binding.gameBoard

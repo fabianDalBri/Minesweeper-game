@@ -5,11 +5,13 @@ Klass som innehåller ....
  */
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import java.lang.IllegalArgumentException
 
-class GameViewModel : ViewModel(){
-    var rows = 8
-    var columns = 8
-    var mines = 10
+class GameViewModel(row : Int, col : Int, mines : Int) : ViewModel(){
+    var rows = row
+    var columns = col
+    var mines = mines
     var firstClick = true
     var gameBoardCells = List(rows){ List(columns) { Tile()}}
     var isTimerRunning = false
@@ -17,7 +19,5 @@ class GameViewModel : ViewModel(){
     // någon form av kontroll så att brädet och timer stannar som de är om man roterar skärmen?
     var isGameOver = false
 
-
-
-
 }
+
