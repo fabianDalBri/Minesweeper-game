@@ -23,12 +23,11 @@ import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 class LeaderboardFragment : Fragment() {
     private lateinit var binding: FragmentLeaderboardBinding
     lateinit var rootView : ConstraintLayout
-    lateinit var gameLeaderboard : TextView
     lateinit var playerList : TextView
+    lateinit var refreshBtn : Button
     lateinit var homeBtn : Button
     lateinit var questionBtn : Button
     lateinit var backBtn : Button
-    lateinit var viewModel: GameViewModel
     val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +36,9 @@ class LeaderboardFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
+        playerList = binding.playerList
+        refreshBtn = binding.refreshButton
         backBtn = binding.BackButton
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
