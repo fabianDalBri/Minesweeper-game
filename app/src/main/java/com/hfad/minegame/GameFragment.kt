@@ -26,7 +26,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
-
 class GameFragment : Fragment(){
 
     private lateinit var binding: FragmentGameBinding
@@ -38,6 +37,7 @@ class GameFragment : Fragment(){
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
     val db = Firebase.firestore
+    var usrName : String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -216,7 +216,6 @@ class GameFragment : Fragment(){
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
         val builder = AlertDialog.Builder(context)
         val input = EditText(context)
-        var usrName : String = ""
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
         for(array in viewModel.gameBoardCells){
@@ -232,7 +231,7 @@ class GameFragment : Fragment(){
             elapsedTime()
             builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " + input.text)
                 .setPositiveButton("Confirm") { dialog, id ->
-                    usrName += input.text.toString()
+                    usrName = input.text.toString()
                 }
             val alert = builder.create()
             alert.show()
@@ -243,12 +242,12 @@ class GameFragment : Fragment(){
         }
     }
 
-    fun firebase(usrName : String){
+    fun firebase(playerName : String){
         // create a player and it's time
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
         var totalSeconds = elapsedTime/1000
         val user = hashMapOf(
-                "Player name" to usrName,
+                "Player name" to playerName,
                 "Time in S" to totalSeconds
         )
 
