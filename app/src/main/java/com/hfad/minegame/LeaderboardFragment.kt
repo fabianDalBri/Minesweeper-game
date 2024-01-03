@@ -12,10 +12,12 @@ import android.widget.Button
 import android.widget.Chronometer
 import android.widget.GridLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 import com.hfad.minegame.databinding.FragmentLeaderboardBinding
@@ -88,26 +90,40 @@ class LeaderboardFragment : Fragment() {
         }
 
         refreshBtn.setOnClickListener {
-            var players = getFirebaseInfo()
-            playerList.text = players.toString()
+            /*
+            val querySnapshot = getFirebaseInfo()
+            playerList.text = querySnapshot.
+
+             */
+            db.collection("Players")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                        var playerName = document.data?.get("Player name").toString()
+                            playerList.text = playerName
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Error getting documents: ", exception)
+                }
         }
+
         // Inflate the layout for this fragment
         return view
     }
 
-    fun getFirebaseInfo() {
-        val collectionRef = db.collection("Leaderboard").document("Players")
-        collectionRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                } else {
-                    Log.d(TAG, "No such document")
+        fun getFirebaseInfo() {
+            db.collection("Players")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                        document.data?.get("player name").toString()
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
-        collectionRef.get()
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Error getting documents: ", exception)
+                }
+        }
     }
-}

@@ -248,20 +248,25 @@ class GameFragment() : Fragment(){
 
     }
 
-    fun firebase(playerName : String){
+    fun firebase(playerName : String) {
         // create a player and it's time
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        var totalSeconds = elapsedTime/1000
+        var totalSeconds = elapsedTime / 1000
+
         val user = hashMapOf(
-                "Player name" to playerName,
-                "Time in S" to totalSeconds
+            "Player name" to playerName,
+            "Time in S" to totalSeconds
         )
 
-        // add the document with a generated ID
-        db.collection("Leaderboard").document("Players")
-            .set(user, SetOptions.merge())
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+        // Add a new document with a generated ID
+        db.collection("Players")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
     }
 
     fun elapsedTime(): String {
