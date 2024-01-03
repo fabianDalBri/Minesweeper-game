@@ -63,8 +63,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:background="#ffffff"
-        android:columnCount="8"
-        android:rowCount="8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"

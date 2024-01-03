@@ -38,7 +38,6 @@ class GameFragment : Fragment(){
     lateinit var viewModel: GameViewModel
     var usrName : String = ""
     val db = Firebase.firestore
-    var usrName : String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
