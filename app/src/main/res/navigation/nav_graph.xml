@@ -20,7 +20,17 @@
         android:id="@+id/gameFragment"
         android:name="com.hfad.minegame.GameFragment"
         android:label="fragment_game"
-        tools:layout="@layout/fragment_game" />
+        tools:layout="@layout/fragment_game" >
+        <argument
+            android:name="rows"
+            app:argType="integer" />
+        <argument
+            android:name="columns"
+            app:argType="integer"/>
+        <argument
+            android:name="mines"
+            app:argType="integer"/>
+    </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
         android:name="com.hfad.minegame.LeaderboardFragment"
@@ -39,11 +49,10 @@
                 app:argType="integer" />
             <argument
                 android:name="columns"
-                app:argType="integer" />
+                app:argType="integer"/>
             <argument
                 android:name="mines"
-                app:argType="integer" />
+                app:argType="integer"/>
         </action>
-
     </fragment>
 </navigation>
