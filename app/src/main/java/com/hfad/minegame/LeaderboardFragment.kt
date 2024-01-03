@@ -1,10 +1,20 @@
 package com.hfad.minegame
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Chronometer
+import android.widget.GridLayout
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.hfad.minegame.databinding.FragmentGameBinding
+import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 
 // get the entire firebase collection
 /*
@@ -18,56 +28,70 @@ import android.view.ViewGroup
     Log.w(TAG, "Error getting documents.", exception)
 }
 */
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LeaderboardFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LeaderboardFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private lateinit var binding: FragmentLeaderboardBinding
+    lateinit var rootView : ConstraintLayout
+    lateinit var gameLeaderboard : TextView
+    lateinit var playerList : TextView
+    lateinit var homeBtn : Button
+    lateinit var questionBtn : Button
+    lateinit var backBtn : Button
+    lateinit var viewModel: GameViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_leaderboard, container, false)
-    }
+        binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
+        val view = binding.root
+        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LeaderboardFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LeaderboardFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        backBtn = binding.BackButton
+        homeBtn = binding.homeButton
+        questionBtn = binding.questionButton
+
+        backBtn.setOnClickListener(){
+            val builder = AlertDialog.Builder(context)
+            //builder sets alert dialog message
+            builder.setMessage("Are you sure you want to go to back?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    view.findNavController().navigate(R.id.welcomeFragment)
                 }
-            }
+                .setNegativeButton("No") { dialog, id ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
+
+        homeBtn.setOnClickListener(){
+            val builder = AlertDialog.Builder(context)
+            //builder sets alert dialog message
+            builder.setMessage("Are you sure you want to go to Home?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    view.findNavController().navigate(R.id.welcomeFragment)
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
+
+        questionBtn.setOnClickListener(){
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("How to play: \n" +
+                    "Reveal all none mine tiles to win the game.\n" +
+                    "Use the flag button to flag potential mines.").setCancelable(true)
+
+            val alert = builder.create()
+            alert.show()
+        }
+        // Inflate the layout for this fragment
+        return view
     }
 }
