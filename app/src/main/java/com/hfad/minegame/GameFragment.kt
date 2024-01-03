@@ -37,6 +37,7 @@ class GameFragment : Fragment(){
     lateinit var questionBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
+    var usrName : String = ""
     val db = Firebase.firestore
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -216,7 +217,6 @@ class GameFragment : Fragment(){
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
         val builder = AlertDialog.Builder(context)
         val input = EditText(context)
-        var usrName : String = ""
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
         for(array in viewModel.gameBoardCells){
@@ -230,7 +230,7 @@ class GameFragment : Fragment(){
             timer.stop()
             viewModel.isTimerRunning = false
             elapsedTime()
-            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " + input.text)
+            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: ")
                 .setPositiveButton("Confirm") { dialog, id ->
                     usrName += input.text.toString()
                 }
@@ -243,12 +243,12 @@ class GameFragment : Fragment(){
         }
     }
 
-    fun firebase(usrName : String){
+    fun firebase(playerName : String){
         // create a player and it's time
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
         var totalSeconds = elapsedTime/1000
         val user = hashMapOf(
-                "Player name" to usrName,
+                "Player name" to playerName,
                 "Time in S" to totalSeconds
         )
 
