@@ -26,7 +26,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
-class GameFragment : Fragment(){
+class GameFragment() : Fragment(){
 
     private lateinit var binding: FragmentGameBinding
     lateinit var rootView : ConstraintLayout
@@ -37,6 +37,9 @@ class GameFragment : Fragment(){
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
     lateinit var viewModelFactory : GameViewModelFactory
+    //var row = rows
+    //var col = columns
+    //var mine = mines
     var usrName : String = ""
     val db = Firebase.firestore
 

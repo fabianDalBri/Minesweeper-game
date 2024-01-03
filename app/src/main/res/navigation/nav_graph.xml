@@ -10,11 +10,11 @@
         android:name="com.hfad.minegame.WelcomeFragment"
         android:label="WelcomeFragment" >
         <action
-            android:id="@+id/action_welcomeFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
-        <action
             android:id="@+id/action_welcomeFragment_to_leaderboardFragment"
             app:destination="@id/leaderboardFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_difficultyFragment"
+            app:destination="@id/difficultyFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
@@ -26,4 +26,24 @@
         android:name="com.hfad.minegame.LeaderboardFragment"
         android:label="fragment_leaderboard"
         tools:layout="@layout/fragment_leaderboard" />
+    <fragment
+        android:id="@+id/difficultyFragment"
+        android:name="com.hfad.minegame.DifficultyFragment"
+        android:label="fragment_difficulty"
+        tools:layout="@layout/fragment_difficulty" >
+        <action
+            android:id="@+id/action_difficultyFragment_to_gameFragment"
+            app:destination="@id/gameFragment" >
+            <argument
+                android:name="rows"
+                app:argType="integer" />
+            <argument
+                android:name="columns"
+                app:argType="integer" />
+            <argument
+                android:name="mines"
+                app:argType="integer" />
+        </action>
+
+    </fragment>
 </navigation>
