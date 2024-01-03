@@ -242,6 +242,7 @@ class GameFragment : Fragment(){
             val alert = builder.create()
             alert.show()
         }
+
     }
 
     fun firebase(playerName : String){
