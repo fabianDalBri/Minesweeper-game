@@ -1,7 +1,9 @@
 package com.hfad.minegame
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,21 +15,11 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 
-// get the entire firebase collection
-/*
-.get()
-.addOnSuccessListener { result ->
-    for (document in result) {
-        Log.d(TAG, "${document.id} => ${document.data}")
-    }
-}
-.addOnFailureListener { exception ->
-    Log.w(TAG, "Error getting documents.", exception)
-}
-*/
 class LeaderboardFragment : Fragment() {
     private lateinit var binding: FragmentLeaderboardBinding
     lateinit var rootView : ConstraintLayout
@@ -37,6 +29,7 @@ class LeaderboardFragment : Fragment() {
     lateinit var questionBtn : Button
     lateinit var backBtn : Button
     lateinit var viewModel: GameViewModel
+    val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -93,5 +86,18 @@ class LeaderboardFragment : Fragment() {
         }
         // Inflate the layout for this fragment
         return view
+    }
+
+    fun getFirebaseInfo(){
+        db.collection("users")
+            .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
     }
 }
