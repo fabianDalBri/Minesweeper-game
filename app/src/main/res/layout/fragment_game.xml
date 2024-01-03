@@ -85,16 +85,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginTop="620dp"
+        android:layout_marginBottom="60dp"
         android:checked="false"
         android:scaleX="2"
         android:scaleY="2"
         android:thumb="@drawable/flag"
         android:track="@drawable/bg_track"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/testText" />
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
     <Button
         android:id="@+id/reset_button"
         android:layout_width="wrap_content"
