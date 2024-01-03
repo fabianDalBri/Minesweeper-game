@@ -15,6 +15,7 @@
         android:layout_marginBottom="80dp"
         android:fontFamily="serif"
         android:text="@string/minesweeper"
+        android:textColor="@color/white"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/leaderboard"
         app:layout_constraintEnd_toEndOf="parent"
