@@ -115,9 +115,6 @@ class GameFragment() : Fragment(){
         // Inflate the layout for this fragment
         return view
     }
-    fun setText(text: String){
-        binding.testText.text = text
-    }
 
     fun initiateGame() {
         viewModel.firstClick = true
@@ -214,10 +211,8 @@ class GameFragment() : Fragment(){
         viewModel.isGameOver = true
         //viewModel.isRunning = false
         viewModel.elapsedTime = 0L
-        if (!viewModel.firstClick){
-            setText("You lost! ${elapsedTime()}")
-        }else
-            setText("You lost! Your time was 0:00")
+
+
     }
 
     fun gameWon(){
@@ -289,8 +284,6 @@ class GameFragment() : Fragment(){
         viewModel.gameBoardCells.flatten().filter { it.isFlagged }.forEach { tile -> tile.toggleFlag() }
         // ta bort view.
         gameboard.removeAllViews()
-        // ta bort text
-        setText("")
         // nollställa klocka
         setBaseTime()
     }

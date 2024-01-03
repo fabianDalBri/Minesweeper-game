@@ -21,7 +21,7 @@
         app:maxZoomType="zoom"
         app:minZoomType="zoom"
         app:overPinchable="true"
-        app:overScrollHorizontal="true"
+        app:overScrollHorizontal="false"
         app:overScrollVertical="true"
         app:verticalPanEnabled="true"
         app:zoomEnabled="true">
@@ -73,15 +73,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/testText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timer" />
 
     <Switch
         android:id="@+id/switch_button"
