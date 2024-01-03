@@ -36,8 +36,8 @@ class GameFragment : Fragment(){
     lateinit var questionBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
-    val db = Firebase.firestore
     var usrName : String = ""
+    val db = Firebase.firestore
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -229,7 +229,7 @@ class GameFragment : Fragment(){
             timer.stop()
             viewModel.isTimerRunning = false
             elapsedTime()
-            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " + input.text)
+            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: ")
                 .setPositiveButton("Confirm") { dialog, id ->
                     usrName = input.text.toString()
                 }
