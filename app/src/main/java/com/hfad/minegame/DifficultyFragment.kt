@@ -1,5 +1,6 @@
 package com.hfad.minegame
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,7 +25,29 @@ class DifficultyFragment : Fragment() {
 
         binding.easy.setOnClickListener() {createGame(8,8,10)}
         binding.medium.setOnClickListener(){createGame(12, 12, 26)}
-        binding.hard.setOnClickListener(){createGame(12, 20, 38)}
+        binding.hard.setOnClickListener(){createGame(18, 12, 38)}
+        binding.questionButton.setOnClickListener(){
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("Choose your desired difficulty. Easy will display a 8*8 gameboard with 10 mines.").setCancelable(true)
+
+            val alert = builder.create()
+            alert.show()}
+
+        binding.homeButton.setOnClickListener(){
+            val builder = AlertDialog.Builder(context)
+            //builder sets alert dialog message
+            builder.setMessage("Are you sure you want to go to Home?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    view.findNavController().navigate(R.id.welcomeFragment)
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
         // Inflate the layout for this fragment
         return view
     }

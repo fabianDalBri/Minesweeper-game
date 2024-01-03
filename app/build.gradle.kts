@@ -9,6 +9,7 @@ android {
     namespace = "com.hfad.minegame"
     compileSdk = 33
 
+
     defaultConfig {
         applicationId = "com.hfad.minegame"
         minSdk = 24
@@ -40,6 +41,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
 
 dependencies {

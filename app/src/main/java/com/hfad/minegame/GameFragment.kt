@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.gms.common.internal.ServiceSpecificExtraArgs.GamesExtraArgs
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
@@ -37,9 +38,6 @@ class GameFragment() : Fragment(){
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
     lateinit var viewModelFactory : GameViewModelFactory
-    //var row = rows
-    //var col = columns
-    //var mine = mines
     var usrName : String = ""
     val db = Firebase.firestore
 
@@ -47,7 +45,13 @@ class GameFragment() : Fragment(){
 
         binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModelFactory = GameViewModelFactory(8,8,10)
+
+
+        var row = GameFragmentArgs.fromBundle(requireArguments()).rows
+        var col = GameFragmentArgs.fromBundle(requireArguments()).columns
+        var mine = GameFragmentArgs.fromBundle(requireArguments()).mines
+
+        viewModelFactory = GameViewModelFactory(row, col, mine)
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 
         rootView = binding.rootLayout
