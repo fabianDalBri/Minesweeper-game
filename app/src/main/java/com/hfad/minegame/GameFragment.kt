@@ -4,10 +4,12 @@ The gamefragment were the game will be displayed on.
  */
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +22,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
 
@@ -33,6 +37,7 @@ class GameFragment : Fragment(){
     lateinit var questionBtn : Button
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
+    val db = Firebase.firestore
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -211,7 +216,7 @@ class GameFragment : Fragment(){
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
         val builder = AlertDialog.Builder(context)
         val input = EditText(context)
-        var usrName : String
+        var usrName : String = ""
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
         for(array in viewModel.gameBoardCells){
@@ -225,16 +230,37 @@ class GameFragment : Fragment(){
             timer.stop()
             viewModel.isTimerRunning = false
             elapsedTime()
-            builder.setMessage("You won! ${elapsedTime()} \n"+" \n Please enter your username: " + input.text)
+            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " + input.text)
                 .setPositiveButton("Confirm") { dialog, id ->
-                    usrName = input.text.toString()
+                    usrName += input.text.toString()
                 }
             val alert = builder.create()
             alert.show()
             viewModel.isGameOver = true
             //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
+            firebase(usrName)
         }
+    }
+
+    fun firebase(usrName : String){
+        // create a player and it's time
+        val elapsedTime = SystemClock.elapsedRealtime() - timer.base
+        var totalSeconds = elapsedTime/1000
+        val user = hashMapOf(
+                "Player name" to usrName,
+                "Time in S" to totalSeconds
+        )
+
+        // add the document with a generated ID
+        db.collection("Players")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
     }
 
     fun elapsedTime(): String {

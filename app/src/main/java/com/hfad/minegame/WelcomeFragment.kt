@@ -16,10 +16,14 @@ class WelcomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_welcome, container, false)
         val startButton = view.findViewById<Button>(R.id.start_game)
+        val leaderboardButton = view.findViewById<Button>(R.id.leaderboard)
         startButton.setOnClickListener {
         view.findNavController().navigate(R.id.action_welcomeFragment_to_gameFragment)
 
          }
+        leaderboardButton.setOnClickListener{
+            view.findNavController().navigate(R.id.action_welcomeFragment_to_leaderboardFragment)
+        }
         // Inflate the layout for this fragment
         return view
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "570230869713",
+    "project_id": "minegame-fb1c9",
+    "storage_bucket": "minegame-fb1c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570230869713:android:76dd45d1ca270777f0bff0",
+        "android_client_info": {
+          "package_name": "com.hfad.minegame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaUwErCqKGjsazwz5Rdju5qIOLWtYaoNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
