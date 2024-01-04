@@ -23,9 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import com.google.android.gms.common.internal.ServiceSpecificExtraArgs.GamesExtraArgs
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
@@ -41,18 +39,17 @@ class GameFragment() : Fragment(){
     lateinit var flagCount : TextView
     lateinit var viewModel: GameViewModel
     lateinit var viewModelFactory : GameViewModelFactory
-    var usrName : String = ""
     val db = Firebase.firestore
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
 
 
-        var row = GameFragmentArgs.fromBundle(requireArguments()).rows
-        var col = GameFragmentArgs.fromBundle(requireArguments()).columns
-        var mine = GameFragmentArgs.fromBundle(requireArguments()).mines
+        val row = GameFragmentArgs.fromBundle(requireArguments()).rows
+        val col = GameFragmentArgs.fromBundle(requireArguments()).columns
+        val mine = GameFragmentArgs.fromBundle(requireArguments()).mines
 
         viewModelFactory = GameViewModelFactory(row, col, mine)
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
@@ -138,7 +135,7 @@ class GameFragment() : Fragment(){
                 elements.col = array.indexOf(elements)
 
                 //elements.reveal()
-                val newView: ImageView = ImageView(context)
+                val newView = ImageView(context)
 
                 elements.tileView = newView
                 gameboard.addView(newView)

@@ -6,42 +6,41 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
 import com.hfad.minegame.databinding.FragmentDifficultyBinding
 
 class DifficultyFragment : Fragment() {
     private lateinit var binding: FragmentDifficultyBinding
-    var rows : Int = 0
-    var columns : Int = 0
-    var mines : Int = 0
+    private var rows : Int = 0
+    private var columns : Int = 0
+    private var mines : Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDifficultyBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.easy.setOnClickListener() {createGame(8,8,10)}
-        binding.medium.setOnClickListener(){createGame(12, 12, 26)}
-        binding.hard.setOnClickListener(){createGame(18, 12, 38)}
-        binding.questionButton.setOnClickListener(){
+        binding.easy.setOnClickListener {createGame(8,8,10)}
+        binding.medium.setOnClickListener {createGame(12, 12, 26)}
+        binding.hard.setOnClickListener {createGame(18, 12, 38)}
+        binding.questionButton.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setMessage("Choose your desired difficulty. Easy will display a 8*8 gameboard with 10 mines.").setCancelable(true)
 
             val alert = builder.create()
             alert.show()}
 
-        binding.homeButton.setOnClickListener(){
+        binding.homeButton.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to Home?")
                 .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
+                .setPositiveButton("Yes") { _, _ ->
                     view.findNavController().navigate(R.id.welcomeFragment)
                 }
-                .setNegativeButton("No") { dialog, id ->
+                .setNegativeButton("No") { dialog, _ ->
                     // Dismiss the dialog
                     dialog.dismiss()
                 }
@@ -52,12 +51,12 @@ class DifficultyFragment : Fragment() {
         return view
     }
 
-    fun createGame(row : Int, column : Int, mine : Int) {
+    private fun createGame(row : Int, column : Int, mine : Int) {
         this.rows = row
         this.columns = column
         this.mines = mine
 
-        var action = DifficultyFragmentDirections.actionDifficultyFragmentToGameFragment(rows, columns, mines)
+        val action = DifficultyFragmentDirections.actionDifficultyFragmentToGameFragment(rows, columns, mines)
         view?.findNavController()?.navigate(action)
     }
 
