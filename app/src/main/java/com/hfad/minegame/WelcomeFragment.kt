@@ -1,6 +1,6 @@
 package com.hfad.minegame
 /**
-    Startfragment with game-menue for the games different opptions.
+    Startfragment with game-menu for the games different options, start game or see the leaderboard.
  */
 
 import android.os.Bundle
@@ -11,9 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
 
-/**
- * 
- */
 class WelcomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

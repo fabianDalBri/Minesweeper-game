@@ -1,5 +1,9 @@
 package com.hfad.minegame
 
+/**
+ * LeaderboardFragment gets data from the firestore data base and displays it in a textview so
+ * players can see a sort of leaderbord with statistics from each game won!
+ */
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -9,33 +13,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Chronometer
-import android.widget.GridLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.getField
-import com.hfad.minegame.databinding.FragmentGameBinding
 import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 
 class LeaderboardFragment : Fragment() {
     private lateinit var binding: FragmentLeaderboardBinding
-    lateinit var rootView: ConstraintLayout
-    lateinit var playerList: TextView
-    lateinit var refreshBtn: Button
-    lateinit var homeBtn: Button
-    lateinit var questionBtn: Button
-    lateinit var backBtn: Button
-    val db = Firebase.firestore
+    private lateinit var playerList: TextView
+    private lateinit var homeBtn: Button
+    private lateinit var questionBtn: Button
+    private lateinit var backBtn: Button
+    private val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -60,15 +54,15 @@ class LeaderboardFragment : Fragment() {
                 Log.d(TAG, "Error getting documents: ", exception)
             }
 
-        backBtn.setOnClickListener() {
+        backBtn.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to back?")
                 .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
+                .setPositiveButton("Yes") { _, _ ->
                     view.findNavController().navigate(R.id.welcomeFragment)
                 }
-                .setNegativeButton("No") { dialog, id ->
+                .setNegativeButton("No") { dialog, _ ->
                     // Dismiss the dialog
                     dialog.dismiss()
                 }
@@ -76,15 +70,15 @@ class LeaderboardFragment : Fragment() {
             alert.show()
         }
 
-        homeBtn.setOnClickListener() {
+        homeBtn.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to Home?")
                 .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
+                .setPositiveButton("Yes") { _, _ ->
                     view.findNavController().navigate(R.id.welcomeFragment)
                 }
-                .setNegativeButton("No") { dialog, id ->
+                .setNegativeButton("No") { dialog, _ ->
                     // Dismiss the dialog
                     dialog.dismiss()
                 }
@@ -92,7 +86,7 @@ class LeaderboardFragment : Fragment() {
             alert.show()
         }
 
-        questionBtn.setOnClickListener() {
+        questionBtn.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setMessage(
                 "In the leaderboard below player name and game time is shown."
