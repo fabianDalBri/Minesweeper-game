@@ -30,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Start Game"
-        app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/leaderboard" />
@@ -41,7 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="Leaderboard"
-        app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />

@@ -14,8 +14,8 @@ class GameViewModel(row : Int, col : Int, mines : Int, level : String) : ViewMod
     var flagCount = mines
     var firstClick = true
     var gameBoardCells = List(rows){ List(columns) { Tile()}}
+    //
     var isTimerRunning = false
     var elapsedTime = 0L
-    var isGameOver = false
 }
 

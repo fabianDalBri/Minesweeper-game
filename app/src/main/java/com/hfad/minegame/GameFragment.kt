@@ -62,7 +62,7 @@ class GameFragment : Fragment(){
         gameBoard = binding.gameBoard
         resetBtn = binding.resetButton
         timer = binding.timer
-        flagCount = binding.flagCounter!!
+        flagCount = binding.flagCounter
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
@@ -86,7 +86,8 @@ class GameFragment : Fragment(){
             val builder = AlertDialog.Builder(context)
             builder.setMessage("How to play: \n" +
                             "Reveal all none mine tiles to win the game.\n" +
-                            "Use the flag button to flag potential mines.").setCancelable(true)
+                            "Use the flag button to flag potential mines." +
+                    "The flag counter counts down each time you flag a tile.").setCancelable(true)
 
             val alert = builder.create()
             alert.show()
@@ -103,14 +104,12 @@ class GameFragment : Fragment(){
         }
 
         if(!viewModel.isTimerRunning) {
-            //viewModel.elapsedTime = 0L
             initiateGame()
         }else{
             timer.start()
             setBaseTime()
             setUpGame()
         }
-        // Inflate the layout for this fragment
         return view
     }
 
@@ -129,12 +128,12 @@ class GameFragment : Fragment(){
         countFlags()
         for (array in viewModel.gameBoardCells)
             for (elements in array) {
-                elements.row = viewModel.gameBoardCells.indexOf(array)
-                elements.col = array.indexOf(elements)
-
                 val newView = ImageView(context)
 
+                elements.row = viewModel.gameBoardCells.indexOf(array)
+                elements.col = array.indexOf(elements)
                 elements.tileView = newView
+
                 gameBoard.addView(newView)
                 gameBoard.rowCount = viewModel.rows
                 gameBoard.columnCount = viewModel.columns
@@ -142,23 +141,23 @@ class GameFragment : Fragment(){
                 newView.layoutParams.width = 80
                 setDrawables(newView, elements)
 
-                    newView.setOnClickListener(View.OnClickListener {
-                        if(!binding.switchButton.isChecked) {
-                            if (!elements.isRevealed && !elements.isFlagged) {
-                                revealCell(elements.row, elements.col)
-                                gameWon()
-                            }
-                            if (viewModel.firstClick && !elements.isMine) {
-                                setBaseTime()
-                                timer.start()
-                                viewModel.firstClick = false
-                                viewModel.isTimerRunning = true
-                            }
-                        } else {
-                            toggleFlag(elements)
-                            countFlags()
+                newView.setOnClickListener(View.OnClickListener {
+                    if(!binding.switchButton.isChecked) {
+                        if (!elements.isRevealed && !elements.isFlagged) {
+                            revealCell(elements.row, elements.col)
+                            gameWon()
                         }
-                    })
+                        if (viewModel.firstClick && !elements.isMine) {
+                            setBaseTime()
+                            timer.start()
+                            viewModel.firstClick = false
+                            viewModel.isTimerRunning = true
+                        }
+                    } else {
+                        toggleFlag(elements)
+                        countFlags()
+                    }
+                })
             }
     }
 
@@ -208,8 +207,6 @@ class GameFragment : Fragment(){
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
         viewModel.isTimerRunning = false
-        viewModel.isGameOver = true
-        //viewModel.isRunning = false
         viewModel.elapsedTime = 0L
 
 
@@ -241,7 +238,6 @@ class GameFragment : Fragment(){
                 .setPositiveButton("Confirm") { _, _ ->
                     firebase(input.text.toString())
                 }
-            viewModel.isGameOver = true
             viewModel.elapsedTime = 0L
 
             val alert = builder.create()
@@ -250,10 +246,7 @@ class GameFragment : Fragment(){
     }
 
     private fun firebase(playerName : String) {
-        // create a player and it's time
-        //val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        //val totalSeconds = elapsedTime / 1000
-
+        // create a player and it's time and played difficulty
         val user = hashMapOf(
             "Player name" to playerName,
             "Time in S" to totalSeconds,

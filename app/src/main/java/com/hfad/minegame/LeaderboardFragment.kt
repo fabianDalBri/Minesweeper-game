@@ -63,7 +63,7 @@ class LeaderboardFragment : Fragment() {
     /**
      * Gets data from database and displays it in the "playerList" textview.
      */
-    fun getData() {
+    private fun getData() {
         var leaderboardEasy = "Easy: \n"
         var leaderboardMedium = "Medium: \n"
         var leaderboardHard = "Hard: \n"
