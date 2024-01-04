@@ -12,6 +12,7 @@ class GameViewModel(row : Int, col : Int, mines : Int) : ViewModel(){
     var rows = row
     var columns = col
     var mines = mines
+    var flagCount = mines
     var firstClick = true
     var gameBoardCells = List(rows){ List(columns) { Tile()}}
     var isTimerRunning = false

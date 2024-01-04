@@ -18,6 +18,7 @@ import android.widget.Chronometer
 import android.widget.EditText
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +38,7 @@ class GameFragment() : Fragment(){
     lateinit var homeBtn : Button
     lateinit var questionBtn : Button
     lateinit var timer : Chronometer
+    lateinit var flagCount : TextView
     lateinit var viewModel: GameViewModel
     lateinit var viewModelFactory : GameViewModelFactory
     var usrName : String = ""
@@ -59,6 +61,7 @@ class GameFragment() : Fragment(){
         gameboard = binding.gameBoard
         resetBtn = binding.resetButton
         timer = binding.timer
+        flagCount = binding.flagCounter!!
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
@@ -128,6 +131,7 @@ class GameFragment() : Fragment(){
      *
      */
     fun setUpGame() {
+        countFlags()
         for (array in viewModel.gameBoardCells)
             for (elements in array) {
                 elements.row = viewModel.gameBoardCells.indexOf(array)
@@ -160,6 +164,7 @@ class GameFragment() : Fragment(){
                             }
                         } else {
                             toggleFlag(elements)
+                            countFlags()
                         }
                     })
             }
@@ -170,6 +175,17 @@ class GameFragment() : Fragment(){
     fun toggleFlag(currentTile: Tile) {
         currentTile.toggleFlag()
         updateBoard(currentTile)
+    }
+
+    fun countFlags() {
+        var counter = 0
+        var tiles = viewModel.gameBoardCells.flatten()
+        tiles.filter { it.isFlagged }.forEach { tile -> counter++}
+        viewModel.flagCount = counter
+        var amountOfFlags = viewModel.mines - viewModel.flagCount
+        flagCount.text = amountOfFlags.toString()
+
+
     }
 
     /** Kontrollerar hur många childviews gameBoard har och ska ändra vilken bild
