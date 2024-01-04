@@ -15,8 +15,8 @@
         app:hasClickableChildren="true"
         app:horizontalPanEnabled="true"
         app:maxZoom="3.0"
-        app:minZoom="0.1"
         app:maxZoomType="zoom"
+        app:minZoom="0.1"
         app:minZoomType="zoom"
         app:overPinchable="true"
         app:overScrollHorizontal="false"
@@ -24,14 +24,14 @@
         app:verticalPanEnabled="true"
         app:zoomEnabled="true">
 
-    <GridLayout
-        android:id="@+id/gameBoard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testText" />
+        <GridLayout
+            android:id="@+id/gameBoard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/testText" />
     </com.otaliastudios.zoom.ZoomLayout>
 
     <Button
@@ -65,12 +65,37 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginTop="32dp"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/flagImage"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/flag_tile"
+        app:layout_constraintEnd_toStartOf="@+id/flagCounter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/game_zoom"
+        app:layout_constraintTop_toBottomOf="@id/timer" />
+
+    <TextView
+        android:id="@+id/flagCounter"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:text="Flags"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/home_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/flagImage"
+        app:layout_constraintTop_toBottomOf="@id/timer" />
 
 
     <Switch
@@ -84,11 +109,10 @@
         android:scaleY="2"
         android:thumb="@drawable/flag"
         android:track="@drawable/bg_track"
-        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/reset_button"
