@@ -41,6 +41,7 @@ class GameFragment : Fragment(){
     private lateinit var flagCount : TextView
     private lateinit var viewModel: GameViewModel
     private lateinit var viewModelFactory : GameViewModelFactory
+    private var totalSeconds = 0L
     private val db = Firebase.firestore
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -231,12 +232,12 @@ class GameFragment : Fragment(){
             revealBoard()
             timer.stop()
             viewModel.isTimerRunning = false
-            elapsedTime()
+            var time = elapsedTime()
             val builder = AlertDialog.Builder(context)
             val input = EditText(context)
             input.inputType = InputType.TYPE_CLASS_TEXT
             builder.setView(input)
-            builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " )
+            builder.setMessage("You won! $time \n"+"Please enter your username: " )
                 .setPositiveButton("Confirm") { _, _ ->
                     firebase(input.text.toString())
                 }
@@ -250,8 +251,8 @@ class GameFragment : Fragment(){
 
     private fun firebase(playerName : String) {
         // create a player and it's time
-        val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        val totalSeconds = elapsedTime / 1000
+        //val elapsedTime = SystemClock.elapsedRealtime() - timer.base
+        //val totalSeconds = elapsedTime / 1000
 
         val user = hashMapOf(
             "Player name" to playerName,
@@ -272,7 +273,7 @@ class GameFragment : Fragment(){
 
     private fun elapsedTime(): String {
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        val totalSeconds = elapsedTime/1000
+        totalSeconds = elapsedTime/1000
         val minutes = totalSeconds/60
         val seconds = totalSeconds%60
         return("Your time was $minutes minutes and $seconds seconds")

@@ -2,6 +2,7 @@ package com.hfad.minegame
 
 import android.widget.ImageView
 
+
 class Tile {
     var row : Int = 0
     var col : Int = 0
