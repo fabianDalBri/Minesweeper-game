@@ -14,6 +14,7 @@ class DifficultyFragment : Fragment() {
     private var rows : Int = 0
     private var columns : Int = 0
     private var mines : Int = 0
+    private var level : String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,9 +23,9 @@ class DifficultyFragment : Fragment() {
         binding = FragmentDifficultyBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.easy.setOnClickListener {createGame(8,8,10)}
-        binding.medium.setOnClickListener {createGame(12, 12, 26)}
-        binding.hard.setOnClickListener {createGame(18, 12, 38)}
+        binding.easy.setOnClickListener {createGame(8,8,10, "Easy")}
+        binding.medium.setOnClickListener {createGame(12, 12, 26, "Medium")}
+        binding.hard.setOnClickListener {createGame(18, 12, 38, "Hard")}
         binding.questionButton.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setMessage("Choose your desired difficulty. Easy will display a 8*8 gameboard with 10 mines.").setCancelable(true)
@@ -51,12 +52,13 @@ class DifficultyFragment : Fragment() {
         return view
     }
 
-    private fun createGame(row : Int, column : Int, mine : Int) {
+    private fun createGame(row : Int, column : Int, mine : Int, levels : String) {
         this.rows = row
         this.columns = column
         this.mines = mine
+        this.level = levels
 
-        val action = DifficultyFragmentDirections.actionDifficultyFragmentToGameFragment(rows, columns, mines)
+        val action = DifficultyFragmentDirections.actionDifficultyFragmentToGameFragment(rows, columns, mines, level)
         view?.findNavController()?.navigate(action)
     }
 

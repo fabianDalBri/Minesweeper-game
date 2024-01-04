@@ -50,8 +50,9 @@ class GameFragment() : Fragment(){
         val row = GameFragmentArgs.fromBundle(requireArguments()).rows
         val col = GameFragmentArgs.fromBundle(requireArguments()).columns
         val mine = GameFragmentArgs.fromBundle(requireArguments()).mines
+        val level = GameFragmentArgs.fromBundle(requireArguments()).level
 
-        viewModelFactory = GameViewModelFactory(row, col, mine)
+        viewModelFactory = GameViewModelFactory(row, col, mine, level)
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 
         rootView = binding.rootLayout
@@ -268,7 +269,8 @@ class GameFragment() : Fragment(){
 
         val user = hashMapOf(
             "Player name" to playerName,
-            "Time in S" to totalSeconds
+            "Time in S" to totalSeconds,
+            "Difficulty" to viewModel.difficulty
         )
 
         // Add a new document with a generated ID

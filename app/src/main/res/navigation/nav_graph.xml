@@ -30,6 +30,9 @@
         <argument
             android:name="mines"
             app:argType="integer"/>
+        <argument
+            android:name="level"
+            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -53,6 +56,9 @@
             <argument
                 android:name="mines"
                 app:argType="integer"/>
+            <argument
+                android:name="level"
+                app:argType="string"/>
         </action>
     </fragment>
 </navigation>

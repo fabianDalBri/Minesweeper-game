@@ -52,7 +52,7 @@ class LeaderboardFragment : Fragment() {
                 for (document in result) {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     leaderboardList += document.getString("Player name").toString() + " : " +
-                            document.get("Time in S").toString()+ " sec"+"\n"
+                            document.get("Time in S").toString()+" sec | "+ document.get("Difficulty") + "\n"
                 }
                 playerList.text = leaderboardList
             }

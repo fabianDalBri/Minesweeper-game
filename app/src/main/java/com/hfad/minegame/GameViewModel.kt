@@ -8,10 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.IllegalArgumentException
 
-class GameViewModel(row : Int, col : Int, mines : Int) : ViewModel(){
+class GameViewModel(row : Int, col : Int, mines : Int, level : String) : ViewModel(){
     var rows = row
     var columns = col
     var mines = mines
+    var difficulty = level
     var flagCount = mines
     var firstClick = true
     var gameBoardCells = List(rows){ List(columns) { Tile()}}
