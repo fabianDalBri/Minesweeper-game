@@ -21,10 +21,11 @@ import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 
 class LeaderboardFragment : Fragment() {
     private lateinit var binding: FragmentLeaderboardBinding
-    private lateinit var playerList: TextView
+    private lateinit var easyList: TextView
+    private lateinit var mediumList: TextView
+    private lateinit var hardList: TextView
     private lateinit var homeBtn: Button
     private lateinit var questionBtn: Button
-    private lateinit var backBtn: Button
     private val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,16 +35,13 @@ class LeaderboardFragment : Fragment() {
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        playerList = binding.playerList
-        backBtn = binding.BackButton
+        easyList = binding.easyList
+        mediumList = binding.mediumList
+        hardList = binding.hardList
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
         getData()
-
-        backBtn.setOnClickListener {
-            view.findNavController().navigate(R.id.welcomeFragment)
-        }
 
         homeBtn.setOnClickListener {
                     view.findNavController().navigate(R.id.welcomeFragment)
@@ -66,16 +64,29 @@ class LeaderboardFragment : Fragment() {
      * Gets data from database and displays it in the "playerList" textview.
      */
     fun getData() {
-        var leaderboardList = ""
+        var leaderboardEasy = "Easy: \n"
+        var leaderboardMedium = "Medium: \n"
+        var leaderboardHard = "Hard: \n"
         db.collection("Players").orderBy("Time in S")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d(TAG, "${document.id} => ${document.data}")
-                    leaderboardList += document.getString("Player name").toString() + " : " +
-                            document.get("Time in S").toString()+" sec | "+ document.get("Difficulty") + "\n"
+                    if (document.get("Difficulty") == "Easy"){
+                        leaderboardEasy += document.getString("Player name").toString() + " : " +
+                                document.get("Time in S").toString()+" sec "+  "\n"
+                    } else if (document.get("Difficulty") == "Medium"){
+                        leaderboardMedium += document.getString("Player name").toString() + " : " +
+                                document.get("Time in S").toString()+" sec "+  "\n"
+                    } else {
+                        leaderboardHard += document.getString("Player name").toString() + " : " +
+                                document.get("Time in S").toString()+" sec " + "\n"
+                    }
+
                 }
-                playerList.text = leaderboardList
+                easyList.text = leaderboardEasy
+                mediumList.text = leaderboardMedium
+                hardList.text = leaderboardHard
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
