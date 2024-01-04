@@ -95,9 +95,7 @@ class LeaderboardFragment : Fragment() {
         questionBtn.setOnClickListener() {
             val builder = AlertDialog.Builder(context)
             builder.setMessage(
-                "How to play: \n" +
-                        "Reveal all none mine tiles to win the game.\n" +
-                        "Use the flag button to flag potential mines."
+                "In the leaderboard below player name and game time is shown."
             ).setCancelable(true)
 
             val alert = builder.create()
@@ -108,7 +106,6 @@ class LeaderboardFragment : Fragment() {
         // Inflate the layout for this fragment
         return view
     }
-
-    }
+}
 
 

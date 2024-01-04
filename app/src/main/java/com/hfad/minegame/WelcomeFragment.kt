@@ -25,16 +25,7 @@ class WelcomeFragment : Fragment() {
         }
         // Inflate the layout for this fragment
         return view
-
-        //easyButton onclicklistener { createBoardActivity(8,8,10) }
-        //MediumButton onclicklistener { createBoardActivity(?,?,?) }
-        //HardButton onclicklistener { createBoardActivity(?,?,?) }
     }
-    /*
-    fun createBoardActivity(height: Int, width: Int, numberOfMines: Int){
-        skicka med input på något vis till gameViewModel.
-    }
-     */
 }
 
 
