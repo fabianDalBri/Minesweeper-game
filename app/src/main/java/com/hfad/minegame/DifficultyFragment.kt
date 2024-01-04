@@ -1,5 +1,10 @@
 package com.hfad.minegame
 
+/**
+ * Difficultyfragment is a middleground fragment that decides what diffuculty the game will be set to,
+ * easy, medium or hard that increase the amount of tiles and mines.
+ */
+
 import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment

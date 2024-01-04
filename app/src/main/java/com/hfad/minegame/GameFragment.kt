@@ -1,6 +1,8 @@
 package com.hfad.minegame
 /**
-The gamefragment were the game will be displayed on.
+ * Gamefragment contains all the game logic like game state and variables and
+ * will display the game board that the user interacts with. This fragment also adds data to
+ * the firestore data base in firebase.
  */
 
 import android.app.AlertDialog
@@ -27,19 +29,19 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
-class GameFragment() : Fragment(){
+class GameFragment : Fragment(){
 
     private lateinit var binding: FragmentGameBinding
-    lateinit var rootView : ConstraintLayout
-    lateinit var gameboard : GridLayout
-    lateinit var resetBtn : Button
-    lateinit var homeBtn : Button
-    lateinit var questionBtn : Button
-    lateinit var timer : Chronometer
-    lateinit var flagCount : TextView
-    lateinit var viewModel: GameViewModel
-    lateinit var viewModelFactory : GameViewModelFactory
-    val db = Firebase.firestore
+    private lateinit var rootView : ConstraintLayout
+    private lateinit var gameBoard : GridLayout
+    private lateinit var resetBtn : Button
+    private lateinit var homeBtn : Button
+    private lateinit var questionBtn : Button
+    private lateinit var timer : Chronometer
+    private lateinit var flagCount : TextView
+    private lateinit var viewModel: GameViewModel
+    private lateinit var viewModelFactory : GameViewModelFactory
+    private val db = Firebase.firestore
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
@@ -56,22 +58,22 @@ class GameFragment() : Fragment(){
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 
         rootView = binding.rootLayout
-        gameboard = binding.gameBoard
+        gameBoard = binding.gameBoard
         resetBtn = binding.resetButton
         timer = binding.timer
         flagCount = binding.flagCounter!!
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
-        homeBtn.setOnClickListener(){
+        homeBtn.setOnClickListener{
             val builder = AlertDialog.Builder(context)
             //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to Home?")
                 .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
+                .setPositiveButton("Yes") { _, _ ->
                     view.findNavController().navigate(R.id.welcomeFragment)
                 }
-                .setNegativeButton("No") { dialog, id ->
+                .setNegativeButton("No") { dialog, _ ->
                     // Dismiss the dialog
                     dialog.dismiss()
                 }
@@ -79,7 +81,7 @@ class GameFragment() : Fragment(){
             alert.show()
         }
 
-        questionBtn.setOnClickListener(){
+        questionBtn.setOnClickListener{
             val builder = AlertDialog.Builder(context)
             builder.setMessage("How to play: \n" +
                             "Reveal all none mine tiles to win the game.\n" +
@@ -88,10 +90,8 @@ class GameFragment() : Fragment(){
             val alert = builder.create()
             alert.show()
         }
-
-
-
-        resetBtn.setOnClickListener(){
+        
+        resetBtn.setOnClickListener{
             if(viewModel.isTimerRunning) {
                 timer.stop()
                 viewModel.isTimerRunning = false
@@ -100,10 +100,6 @@ class GameFragment() : Fragment(){
             setBaseTime()
             initiateGame()
         }
-
-        //Skapar bräde med celler, lista med listor rows*columns, där varje cell består
-        //av objekt av typen Tile
-       // gameBoardCells = viewModel.gameBoardCells
 
         if(!viewModel.isTimerRunning) {
             //viewModel.elapsedTime = 0L
@@ -117,7 +113,7 @@ class GameFragment() : Fragment(){
         return view
     }
 
-    fun initiateGame() {
+    private fun initiateGame() {
         viewModel.firstClick = true
         resetBoard()
         plantMines()
@@ -125,28 +121,25 @@ class GameFragment() : Fragment(){
         setUpGame()
     }
 
-    /** Skapar en ny ImageView för varje Tile-objekt i spelbrädet
-     *
+    /**
+     * Creates the game board and adds on click listeners to each tile click.
      */
-    fun setUpGame() {
+    private fun setUpGame() {
         countFlags()
         for (array in viewModel.gameBoardCells)
             for (elements in array) {
                 elements.row = viewModel.gameBoardCells.indexOf(array)
                 elements.col = array.indexOf(elements)
 
-                //elements.reveal()
                 val newView = ImageView(context)
 
                 elements.tileView = newView
-                gameboard.addView(newView)
-                gameboard.rowCount = viewModel.rows
-                gameboard.columnCount = viewModel.columns
+                gameBoard.addView(newView)
+                gameBoard.rowCount = viewModel.rows
+                gameBoard.columnCount = viewModel.columns
                 newView.layoutParams.height = 80
                 newView.layoutParams.width = 80
-                //kalla på metod som sätter drawable beroende på isRevealed och state?
                 setDrawables(newView, elements)
-
 
                     newView.setOnClickListener(View.OnClickListener {
                         if(!binding.switchButton.isChecked) {
@@ -168,46 +161,38 @@ class GameFragment() : Fragment(){
             }
     }
 
-    // Kallar på funktion i Tile.kt som ändrar isFlagged till true/false
-    // Skapa knapp som ändrar till flaggningstryck.
-    fun toggleFlag(currentTile: Tile) {
+    private fun toggleFlag(currentTile: Tile) {
         currentTile.toggleFlag()
         updateBoard(currentTile)
     }
 
-    fun countFlags() {
+    private fun countFlags() {
         var counter = 0
-        var tiles = viewModel.gameBoardCells.flatten()
-        tiles.filter { it.isFlagged }.forEach { tile -> counter++}
+        val tiles = viewModel.gameBoardCells.flatten()
+        tiles.filter { it.isFlagged }.forEach { _ -> counter++}
         viewModel.flagCount = counter
-        var amountOfFlags = viewModel.mines - viewModel.flagCount
+        val amountOfFlags = viewModel.mines - viewModel.flagCount
         flagCount.text = amountOfFlags.toString()
 
 
     }
 
-    /** Kontrollerar hur många childviews gameBoard har och ska ändra vilken bild
-     * som visas beroende på state. (fungerar ej helt?)
-     * Redundant? varför har jag lagt till childviews? För att hitta och ändra view och
-     * dess drawable?
-     */
-    fun setDrawables(currentView : ImageView, currentTile : Tile){
+    private fun setDrawables(currentView : ImageView, currentTile : Tile){
         lateinit var image : Drawable
         image = when(currentTile.state) {
             Tile.State.MINE -> resources.getDrawable(R.drawable.mine_tile)
             Tile.State.FLAGGED -> resources.getDrawable(R.drawable.flag_tile)
             Tile.State.HIDDEN -> resources.getDrawable(R.drawable.tile_hidden)
-            // tilestate för detonerad bomb för alla eller de som ej flaggats?
             Tile.State.NUMBERED -> numberedTile(currentTile.numberOfMinedNeighbours)
         }
         currentView.setImageDrawable(image)
     }
-    fun updateBoard(currentTile : Tile) {
+    private fun updateBoard(currentTile : Tile) {
         val imView = currentTile.tileView
         setDrawables(imView, currentTile)
     }
 
-    fun revealBoard(){
+    private fun revealBoard(){
         val revealAll = viewModel.gameBoardCells.flatten()
         for (tile in revealAll) {
             if (!tile.isRevealed) {
@@ -217,7 +202,7 @@ class GameFragment() : Fragment(){
         }
     }
 
-    fun gameOver(currentTile : Tile) {
+    private fun gameOver(currentTile : Tile) {
         revealBoard()
         currentTile.tileView.setImageDrawable(resources.getDrawable(R.drawable.mine_detonated))
         timer.stop()
@@ -229,9 +214,12 @@ class GameFragment() : Fragment(){
 
     }
 
-    fun gameWon(){
-        // Kollar hur många tiles som är revealed och adderar reavealedTiles
-        var revealedTiles : Int = 0
+    /**
+     * Each time a tile is clicked gameWon method checks if all tiles are revealed
+     * except the mines.
+     */
+    private fun gameWon(){
+        var revealedTiles = 0
         val totalAmountOfTiles : Int = viewModel.rows*viewModel.columns
         for(array in viewModel.gameBoardCells){
             for (elements in array){
@@ -249,23 +237,21 @@ class GameFragment() : Fragment(){
             input.inputType = InputType.TYPE_CLASS_TEXT
             builder.setView(input)
             builder.setMessage("You won! ${elapsedTime()} \n"+"Please enter your username: " )
-                .setPositiveButton("Confirm") { dialog, which ->
+                .setPositiveButton("Confirm") { _, _ ->
                     firebase(input.text.toString())
                 }
             viewModel.isGameOver = true
-            //viewModel.isRunning = false
             viewModel.elapsedTime = 0L
 
             val alert = builder.create()
             alert.show()
         }
-
     }
 
-    fun firebase(playerName : String) {
+    private fun firebase(playerName : String) {
         // create a player and it's time
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        var totalSeconds = elapsedTime / 1000
+        val totalSeconds = elapsedTime / 1000
 
         val user = hashMapOf(
             "Player name" to playerName,
@@ -284,27 +270,19 @@ class GameFragment() : Fragment(){
             }
     }
 
-    fun elapsedTime(): String {
+    private fun elapsedTime(): String {
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        // Omvandlar tid från millisekunder till sekunder m 2 decimaler
-        var totalSeconds = elapsedTime/1000
-        // om minuter blir mindre är 10 lägg på en nolla framför.
-        var minutes = totalSeconds/60
-        // om sekunder blir mindre är 10 lägg på en nolla framför.
-        var seconds = totalSeconds%60
+        val totalSeconds = elapsedTime/1000
+        val minutes = totalSeconds/60
+        val seconds = totalSeconds%60
         return("Your time was $minutes minutes and $seconds seconds")
     }
 
     private fun resetBoard() {
-        // om tile är mine, ta bort från gameboard.
         viewModel.gameBoardCells.flatten().filter { it.isMine }.forEach { tile -> tile.removeMine() }
-        // om tile är avslöjad, göm den igen.
         viewModel.gameBoardCells.flatten().filter { it.isRevealed }.forEach { tile -> tile.hide() }
-        // om tile är flaggad, ta bort flagga
         viewModel.gameBoardCells.flatten().filter { it.isFlagged }.forEach { tile -> tile.toggleFlag() }
-        // ta bort view.
-        gameboard.removeAllViews()
-        // nollställa klocka
+        gameBoard.removeAllViews()
         setBaseTime()
     }
 
@@ -334,10 +312,10 @@ class GameFragment() : Fragment(){
         }
     }
 
-    /** Tanken är att funktionen ska sätta rätt numbered tile baserat på hur många
-     * minor som finns i närheten (med hjälp av annan funktion?)
+    /**
+     * Give a tile the correct number based on how many mines are nearby
      */
-    fun numberedTile(number: Int): Drawable = when (number) {
+    private fun numberedTile(number: Int): Drawable = when (number) {
         0 -> resources.getDrawable(R.drawable.numbered_tile_0)
         1 -> resources.getDrawable(R.drawable.numbered_tile_1)
         2 -> resources.getDrawable(R.drawable.numbered_tile_2)
@@ -352,9 +330,7 @@ class GameFragment() : Fragment(){
         }
     }
 
-    // Ändrar state på Tile till mina? Returnerar lista så att jag ska kunna
-    // kontrollera om det ändras, kan tar bort returtyp sen?
-    fun plantMines() : List<Tile>{
+    private fun plantMines() : List<Tile>{
         val allTiles = viewModel.gameBoardCells.flatten()
         var counter = 0
         while(counter < viewModel.mines) {
@@ -368,13 +344,11 @@ class GameFragment() : Fragment(){
     }
 
     private fun calculateNumbers() {
-        //var endast för testutskrift
-        var testNum : String = ""
+        var testNum = ""
         for (row in 0 until viewModel.rows) {
             for (col in 0 until viewModel.columns) {
                 if (!viewModel.gameBoardCells[row][col].isMine) {
                     val count = countAdjacentMines(row, col)
-                    //endast för testutskrift
                     testNum += count
                     viewModel.gameBoardCells[row][col].numberOfMinedNeighbours = count
                 }
@@ -395,7 +369,7 @@ class GameFragment() : Fragment(){
         }
         return count
     }
-    fun setBaseTime() {
+    private fun setBaseTime() {
         binding.timer.base = SystemClock.elapsedRealtime() - viewModel.elapsedTime
     }
 
