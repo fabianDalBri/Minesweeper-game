@@ -2,7 +2,13 @@ package com.hfad.minegame
 
 import android.widget.ImageView
 
-
+/**
+ * The Tile class represents every tile on the gameboard, and is responsible for
+ * changing the states of each tile.
+ *
+ * Row, column and tileView are assigned values when the game is set up and then
+ * used to access specific tiles and their image views.
+ */
 class Tile {
     var row : Int = 0
     var col : Int = 0
@@ -36,8 +42,6 @@ class Tile {
         isMine = false
     }
 
-    fun isEmpty() = !isMine && numberOfMinedNeighbours == 0
-
     var numberOfMinedNeighbours = 0
     var isFlagged = false
     var isRevealed = false
@@ -52,8 +56,6 @@ class Tile {
                 false -> State.HIDDEN
             }
         }
-
-    fun isFalslyFlagged() = isFlagged and isMine
 
     override fun toString(): String {
         return when (state) {

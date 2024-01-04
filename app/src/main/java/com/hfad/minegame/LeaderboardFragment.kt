@@ -39,6 +39,33 @@ class LeaderboardFragment : Fragment() {
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
+        getData()
+
+        backBtn.setOnClickListener {
+            view.findNavController().navigate(R.id.welcomeFragment)
+        }
+
+        homeBtn.setOnClickListener {
+                    view.findNavController().navigate(R.id.welcomeFragment)
+        }
+
+        questionBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(
+                "In the leaderboard below player name and game time is shown."
+            ).setCancelable(true)
+
+            val alert = builder.create()
+            alert.show()
+        }
+
+        return view
+    }
+
+    /**
+     * Gets data from database and displays it in the "playerList" textview.
+     */
+    fun getData() {
         var leaderboardList = ""
         db.collection("Players").orderBy("Time in S")
             .get()
@@ -53,52 +80,6 @@ class LeaderboardFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
             }
-
-        backBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            //builder sets alert dialog message
-            builder.setMessage("Are you sure you want to go to back?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { _, _ ->
-                    view.findNavController().navigate(R.id.welcomeFragment)
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
-        }
-
-        homeBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            //builder sets alert dialog message
-            builder.setMessage("Are you sure you want to go to Home?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { _, _ ->
-                    view.findNavController().navigate(R.id.welcomeFragment)
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
-        }
-
-        questionBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage(
-                "In the leaderboard below player name and game time is shown."
-            ).setCancelable(true)
-
-            val alert = builder.create()
-            alert.show()
-        }
-
-
-        // Inflate the layout for this fragment
-        return view
     }
 }
 

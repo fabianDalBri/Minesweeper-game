@@ -1,7 +1,7 @@
 package com.hfad.minegame
 
 /**
- * Difficultyfragment is a middleground fragment that decides what diffuculty the game will be set to,
+ * Difficultyfragment is a middleground fragment that decides what difficulty the game will be set to,
  * easy, medium or hard that increase the amount of tiles and mines.
  */
 
@@ -31,32 +31,26 @@ class DifficultyFragment : Fragment() {
         binding.easy.setOnClickListener {createGame(8,8,10, "Easy")}
         binding.medium.setOnClickListener {createGame(12, 12, 26, "Medium")}
         binding.hard.setOnClickListener {createGame(18, 12, 38, "Hard")}
+
         binding.questionButton.setOnClickListener {
             val builder = AlertDialog.Builder(context)
-            builder.setMessage("Choose your desired difficulty. Easy will display a 8*8 gameboard with 10 mines.").setCancelable(true)
+            builder.setMessage("Choose your desired difficulty. \n Easy will display a 8x8 gameboard with 10 mines. " +
+                    "\n Medium will display a 12x12 gameboard with 26 mines. " +
+                    "\n Hard will display a 18x12 gameboard with 38 mines.").setCancelable(true)
 
             val alert = builder.create()
             alert.show()}
 
         binding.homeButton.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            //builder sets alert dialog message
-            builder.setMessage("Are you sure you want to go to Home?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { _, _ ->
                     view.findNavController().navigate(R.id.welcomeFragment)
                 }
-                .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
-        }
-        // Inflate the layout for this fragment
         return view
     }
 
+    /**
+     * createGame sends the gameboard parameters (amount of rows, columns, mines and the
+     * chosen difficulty to the GameFragment using SafeArgs.
+     */
     private fun createGame(row : Int, column : Int, mine : Int, levels : String) {
         this.rows = row
         this.columns = column
