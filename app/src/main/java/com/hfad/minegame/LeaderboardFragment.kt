@@ -93,6 +93,8 @@ class LeaderboardFragment : Fragment() {
 
         refreshBtn.setOnClickListener {
 
+            //db.collection("Players").where("Time in S", "<", 200).orderBy("Time in S", "asc")
+
             var leaderboardList = ""
             db.collection("Players").orderBy("Time in S")
                 .get()
