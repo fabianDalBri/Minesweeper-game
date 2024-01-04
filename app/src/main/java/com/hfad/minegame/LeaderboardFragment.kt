@@ -41,10 +41,24 @@ class LeaderboardFragment : Fragment() {
         val view = binding.root
 
         playerList = binding.playerList
-        refreshBtn = binding.refreshButton
         backBtn = binding.BackButton
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
+
+        var leaderboardList = ""
+        db.collection("Players").orderBy("Time in S")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    leaderboardList += document.getString("Player name").toString() + " : " +
+                            document.get("Time in S").toString()+ " sec"+"\n"
+                }
+                playerList.text = leaderboardList
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
 
         backBtn.setOnClickListener() {
             val builder = AlertDialog.Builder(context)
@@ -90,26 +104,6 @@ class LeaderboardFragment : Fragment() {
             alert.show()
         }
 
-
-        refreshBtn.setOnClickListener {
-
-            //db.collection("Players").where("Time in S", "<", 200).orderBy("Time in S", "asc")
-
-            var leaderboardList = ""
-            db.collection("Players").orderBy("Time in S")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        Log.d(TAG, "${document.id} => ${document.data}")
-                        leaderboardList += document.getString("Player name").toString() + " : " +
-                                document.get("Time in S").toString()+ " sec"+"\n"
-                    }
-                    playerList.text = leaderboardList
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting documents: ", exception)
-                }
-        }
 
         // Inflate the layout for this fragment
         return view
