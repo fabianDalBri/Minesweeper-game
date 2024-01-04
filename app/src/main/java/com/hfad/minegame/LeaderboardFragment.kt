@@ -1,7 +1,9 @@
 package com.hfad.minegame
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,32 +12,26 @@ import android.widget.Button
 import android.widget.Chronometer
 import android.widget.GridLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.getField
 import com.hfad.minegame.databinding.FragmentGameBinding
 import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 
-// get the entire firebase collection
-/*
-.get()
-.addOnSuccessListener { result ->
-    for (document in result) {
-        Log.d(TAG, "${document.id} => ${document.data}")
-    }
-}
-.addOnFailureListener { exception ->
-    Log.w(TAG, "Error getting documents.", exception)
-}
-*/
 class LeaderboardFragment : Fragment() {
     private lateinit var binding: FragmentLeaderboardBinding
-    lateinit var rootView : ConstraintLayout
-    lateinit var playerList : TextView
-    lateinit var homeBtn : Button
-    lateinit var questionBtn : Button
-    lateinit var backBtn : Button
-    lateinit var viewModel: GameViewModel
+    lateinit var rootView: ConstraintLayout
+    lateinit var playerList: TextView
+    lateinit var refreshBtn: Button
+    lateinit var homeBtn: Button
+    lateinit var questionBtn: Button
+    lateinit var backBtn: Button
+    val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,14 +39,14 @@ class LeaderboardFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
         playerList = binding.playerList
+        refreshBtn = binding.refreshButton
         backBtn = binding.BackButton
         homeBtn = binding.homeButton
         questionBtn = binding.questionButton
 
-        backBtn.setOnClickListener(){
+        backBtn.setOnClickListener() {
             val builder = AlertDialog.Builder(context)
             //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to back?")
@@ -66,7 +62,7 @@ class LeaderboardFragment : Fragment() {
             alert.show()
         }
 
-        homeBtn.setOnClickListener(){
+        homeBtn.setOnClickListener() {
             val builder = AlertDialog.Builder(context)
             //builder sets alert dialog message
             builder.setMessage("Are you sure you want to go to Home?")
@@ -82,16 +78,43 @@ class LeaderboardFragment : Fragment() {
             alert.show()
         }
 
-        questionBtn.setOnClickListener(){
+        questionBtn.setOnClickListener() {
             val builder = AlertDialog.Builder(context)
-            builder.setMessage("Game Leaderbord: \n" +
-                    "Playername and their gametime ends up in the.\n" +
-                    "bracket below if you have won the game.").setCancelable(true)
+            builder.setMessage(
+                "How to play: \n" +
+                        "Reveal all none mine tiles to win the game.\n" +
+                        "Use the flag button to flag potential mines."
+            ).setCancelable(true)
 
             val alert = builder.create()
             alert.show()
         }
+
+
+        refreshBtn.setOnClickListener {
+
+            //db.collection("Players").where("Time in S", "<", 200).orderBy("Time in S", "asc")
+
+            var leaderboardList = ""
+            db.collection("Players").orderBy("Time in S")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                        leaderboardList += document.getString("Player name").toString() + " : " +
+                                document.get("Time in S").toString()+ " sec"+"\n"
+                    }
+                    playerList.text = leaderboardList
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Error getting documents: ", exception)
+                }
+        }
+
         // Inflate the layout for this fragment
         return view
     }
-}
+
+    }
+
+

@@ -22,7 +22,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.gms.common.internal.ServiceSpecificExtraArgs.GamesExtraArgs
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import com.hfad.minegame.databinding.FragmentGameBinding
 
@@ -37,9 +39,6 @@ class GameFragment() : Fragment(){
     lateinit var timer : Chronometer
     lateinit var viewModel: GameViewModel
     lateinit var viewModelFactory : GameViewModelFactory
-    //var row = rows
-    //var col = columns
-    //var mine = mines
     var usrName : String = ""
     val db = Firebase.firestore
 
@@ -47,7 +46,13 @@ class GameFragment() : Fragment(){
 
         binding = FragmentGameBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModelFactory = GameViewModelFactory(8,8,10)
+
+
+        var row = GameFragmentArgs.fromBundle(requireArguments()).rows
+        var col = GameFragmentArgs.fromBundle(requireArguments()).columns
+        var mine = GameFragmentArgs.fromBundle(requireArguments()).mines
+
+        viewModelFactory = GameViewModelFactory(row, col, mine)
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 
         rootView = binding.rootLayout
@@ -109,9 +114,6 @@ class GameFragment() : Fragment(){
         }
         // Inflate the layout for this fragment
         return view
-    }
-    fun setText(text: String){
-        binding.testText.text = text
     }
 
     fun initiateGame() {
@@ -209,10 +211,8 @@ class GameFragment() : Fragment(){
         viewModel.isGameOver = true
         //viewModel.isRunning = false
         viewModel.elapsedTime = 0L
-        if (!viewModel.firstClick){
-            setText("You lost! ${elapsedTime()}")
-        }else
-            setText("You lost! Your time was 0:00")
+
+
     }
 
     fun gameWon(){
@@ -248,16 +248,17 @@ class GameFragment() : Fragment(){
 
     }
 
-    fun firebase(playerName : String){
+    fun firebase(playerName : String) {
         // create a player and it's time
         val elapsedTime = SystemClock.elapsedRealtime() - timer.base
-        var totalSeconds = elapsedTime/1000
+        var totalSeconds = elapsedTime / 1000
+
         val user = hashMapOf(
-                "Player name" to playerName,
-                "Time in S" to totalSeconds
+            "Player name" to playerName,
+            "Time in S" to totalSeconds
         )
 
-        // add the document with a generated ID
+        // Add a new document with a generated ID
         db.collection("Players")
             .add(user)
             .addOnSuccessListener { documentReference ->
@@ -288,8 +289,6 @@ class GameFragment() : Fragment(){
         viewModel.gameBoardCells.flatten().filter { it.isFlagged }.forEach { tile -> tile.toggleFlag() }
         // ta bort view.
         gameboard.removeAllViews()
-        // ta bort text
-        setText("")
         // nollställa klocka
         setBaseTime()
     }
