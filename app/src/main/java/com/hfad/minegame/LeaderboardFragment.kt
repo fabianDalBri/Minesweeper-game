@@ -19,6 +19,7 @@ import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.getField
 import com.hfad.minegame.databinding.FragmentGameBinding
 import com.hfad.minegame.databinding.FragmentLeaderboardBinding
 
@@ -89,20 +90,19 @@ class LeaderboardFragment : Fragment() {
             alert.show()
         }
 
-        refreshBtn.setOnClickListener {
-            /*
-            val querySnapshot = getFirebaseInfo()
-            playerList.text = querySnapshot.
 
-             */
-            db.collection("Players")
+        refreshBtn.setOnClickListener {
+
+            var leaderboardList = ""
+            db.collection("Players").orderBy("Time in S")
                 .get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
                         Log.d(TAG, "${document.id} => ${document.data}")
-                        var playerName = document.data?.get("Player name").toString()
-                            playerList.text = playerName
+                        leaderboardList += document.getString("Player name").toString() + " : " +
+                                document.get("Time in S").toString()+ " sec"+"\n"
                     }
+                    playerList.text = leaderboardList
                 }
                 .addOnFailureListener { exception ->
                     Log.d(TAG, "Error getting documents: ", exception)
@@ -113,17 +113,6 @@ class LeaderboardFragment : Fragment() {
         return view
     }
 
-        fun getFirebaseInfo() {
-            db.collection("Players")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        Log.d(TAG, "${document.id} => ${document.data}")
-                        document.data?.get("player name").toString()
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting documents: ", exception)
-                }
-        }
     }
+
+
