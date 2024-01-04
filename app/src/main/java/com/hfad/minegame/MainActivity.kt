@@ -1,5 +1,7 @@
 package com.hfad.minegame
-
+/**
+ * MainActivity is in charge of showing all fragments.
+ */
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 

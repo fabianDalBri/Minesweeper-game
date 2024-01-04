@@ -1,5 +1,7 @@
 package com.hfad.minegame
-
+/**
+ * GameViewModelFactory is used to send parameters to send to GameViewModel
+ */
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.IllegalArgumentException
